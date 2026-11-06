@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מעשיות</title>
+<meta property="og:title" content="מעשיות — אלע פילמען אין איין פלאץ">
+<meta property="og:description" content="קוקן אדער אראפלאדן. מען קען עס לייגן אויפן טעלעפאן ווי אן עפ.">
+<meta name="theme-color" content="#1f4e79">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.png%3Fv=11" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png%3Fv=11">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="מעשיות">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f2ed;color:#1b1b1b;font-family:"Noto Sans Hebrew","Arial Hebrew","Segoe UI",Arial,sans-serif;line-height:1.5}
+header{background:#1f4e79;color:#fff;padding:18px 16px calc(14px) ;text-align:center}
+header h1{margin:0;font-size:1.7rem}
+header p{margin:4px 0 0;font-size:1rem;opacity:.9}
+main{max-width:760px;margin:0 auto;padding:12px 12px 40px}
+.install{background:#fff;border:1px solid #d9d4c7;border-radius:10px;padding:12px 14px;margin:6px 0 14px;font-size:1rem}
+.install b{color:#1f4e79}
+.install button{display:none;margin-top:8px;width:100%;padding:12px;font-size:1.05rem;border:0;border-radius:8px;background:#1f4e79;color:#fff;font-family:inherit}
+.card{background:#fff;border:1px solid #d9d4c7;border-radius:10px;padding:12px 14px;margin:10px 0}
+.card h2{margin:0;font-size:1.15rem;line-height:1.4}
+.meta{margin:2px 0 10px;color:#555;font-size:.95rem}
+.btns{display:flex;gap:10px}
+.btns>*{flex:1;text-align:center;padding:11px 8px;font-size:1.05rem;border-radius:8px;font-family:inherit;text-decoration:none;cursor:pointer}
+.play{background:#1f4e79;color:#fff;border:0}
+.play.on{background:#6b6b6b}
+.dl{background:#fff;color:#1f4e79;border:2px solid #1f4e79}
+.player video{width:100%;margin-top:10px;background:#000;border-radius:8px;display:block}
+h3{margin:26px 4px 4px;font-size:1.2rem;color:#1f4e79}
+.sec-note{margin:0 4px 6px;color:#555;font-size:.95rem}
+footer{text-align:center;color:#777;font-size:.85rem;padding:10px 0 30px}
+.sent{margin:-8px 0 10px;color:#777;font-size:.85rem}
+.plabel{margin:8px 0 4px;color:#333;font-size:.95rem}
+.pgrid{display:flex;flex-wrap:wrap;gap:8px}
+.pgrid>*{flex:0 0 auto;min-width:56px;text-align:center;padding:9px 10px;font-size:1rem;border-radius:8px;font-family:inherit;text-decoration:none;cursor:pointer}
+.play.part{background:#1f4e79;color:#fff;border:0}
+.play.part.on{background:#6b6b6b}
+.dl.part{background:#fff;color:#1f4e79;border:2px solid #1f4e79}
+.openpdf{background:#1f4e79;color:#fff;border:0}
+.jump{margin:0 4px 6px;font-size:1rem}.jump a{color:#1f4e79;font-weight:bold;text-decoration:none}
+.vwrap{margin:8px 0 8px;background:#000;border-radius:8px;overflow:hidden;aspect-ratio:16/9}
+.vwrap video{display:block;width:100%;height:100%;background:#000;object-fit:contain}
+.prow{display:flex;gap:12px;align-items:flex-start}
+.pcov{flex:0 0 76px;display:block;margin-bottom:10px}
+.pcov img{display:block;width:76px;height:auto;border:1px solid #d9d4c7;border-radius:4px;background:#fff}
+.pinfo{flex:1;min-width:0}
+.vfail{display:none;margin:-2px 0 8px;font-size:.9rem}.vfail a{color:#1f4e79}
+.vwrap.tall{margin-left:auto;margin-right:auto}
+</style>
+</head>
+<body>
+<header><h1>מעשיות</h1><p>אלע 69 פילמען אין איין פלאץ · די נייסטע אויבן</p></header>
+<main>
+<div class="install" id="install">
+<b>לייגן אויפן טעלעפאן ווי אן עפ:</b><br/>
+אייפאון (<span dir="ltr">Safari</span>): דריקט דעם <b dir="ltr">Share</b> קנעפל ⬆, און דערנאך <b dir="ltr">Add to Home Screen</b>.<br/>
+אנדרויד (<span dir="ltr">Chrome</span>): דריקט דעם מעניו ⋮, און דערנאך <b dir="ltr">Install app</b>.
+<button id="installBtn" type="button">📲 לייגן אויפן טעלעפאן</button>
+</div>
+<p class="jump"><a href="index.html#pdfs">📖 ביכלעך און PDF־ס (20) ↓</a></p>
+<article class="card">
+<h2>פארוואס ער האט געשטיצט ממדאני: דער שמועס מיט נפתלי משה אינדיג, אין טיפקייט</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/eli-z17-indig-deep-dive.jpg" src="https://eli-z17-indig-deep-dive.sites.tab.bot/dl/z17-indig-deep-dive.mp4?play"></video></div>
+<p class="meta">א טיפער פילם פון שמואליקאסט 81 · 2 שעה 52 מינוט · 109 מעגאבייט · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 2 נאוועמבער</p>
+<div class="btns"><a class="dl" href="https://eli-z17-indig-deep-dive.sites.tab.bot/dl/z17-indig-deep-dive.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער זון וואס מען האט גערופן שוואך</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/eli-z15-son-called-weak.jpg" src="https://eli-z15-son-called-weak.sites.tab.bot/dl/z15-son-called-weak.mp4?play"></video></div>
+<p class="meta">2 שעה 22 מינוט · 90 מעגאבייט · ענגליש קול, אידישע טעקסט · מיט לעבעדיגע סצענעס</p>
+<p class="sent">געשיקט: 1 נאוועמבער</p>
+<div class="btns"><a class="dl" href="https://eli-z15-son-called-weak.sites.tab.bot/dl/z15-son-called-weak.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער יינגל וואס מען האט גערופן שוואך</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/eli-z14-boy-called-weak.jpg" src="https://eli-z14-boy-called-weak.sites.tab.bot/dl/z14-boy-called-weak.mp4?play"></video></div>
+<p class="meta">2 שעה 14 מינוט · 85 מעגאבייט · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 29 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z14-boy-called-weak.sites.tab.bot/dl/z14-boy-called-weak.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די פרוי וואס האט עס אויפגעבויט</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/eli-z13-woman-who-built-it.jpg" src="https://eli-z13-woman-who-built-it.sites.tab.bot/dl/z13-woman-who-built-it.mp4?play"></video></div>
+<p class="meta">1 שעה 56 מינוט · <span dir="ltr">73 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 29 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z13-woman-who-built-it.sites.tab.bot/dl/z13-woman-who-built-it.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער מאן וואס האט עס אויפגעבויט</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/z12-man-who-built-it.jpg" src="https://eli-z12-man-who-built-it.sites.tab.bot/dl/z12-man-who-built-it.mp4?play"></video></div>
+<p class="meta">2 שעה 5 מינוט · <span dir="ltr">79 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 27 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z12-man-who-built-it.sites.tab.bot/dl/z12-man-who-built-it.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער שטילער מייסטער פון גרעיסטעד</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/z11-silent-master.jpg" src="https://eli-z11-silent-master.sites.tab.bot/dl/z11-silent-master.mp4?play"></video></div>
+<p class="meta">2 שעה 2 מינוט · <span dir="ltr">78 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 26 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z11-silent-master.sites.tab.bot/dl/z11-silent-master.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער זון וואס מען האט אוועקגעווארפן</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/z10-son-returns.jpg" src="https://eli-z10-son-returns.sites.tab.bot/dl/z10-son-returns.mp4?play"></video></div>
+<p class="meta">2 שעה 13 מינוט · <span dir="ltr">77 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 26 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z10-son-returns.sites.tab.bot/dl/z10-son-returns.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער מאסטער-קעניג</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/z8-master-king.jpg" src="https://eli-z8-master-king.sites.tab.bot/dl/z8-master-king.mp4?play"></video></div>
+<p class="meta">9 שעה 26 מינוט · <span dir="ltr">355 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 26 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z8-master-king.sites.tab.bot/dl/z8-master-king.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>טרעט צוריק! איך בין דער באהאלטענער קעניג</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/z9-hidden-king.jpg" src="https://eli-z9-hidden-king.sites.tab.bot/dl/z9-hidden-king.mp4?play"></video></div>
+<p class="meta">1 שעה 29 מינוט · <span dir="ltr">51 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 26 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z9-hidden-king.sites.tab.bot/dl/z9-hidden-king.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די קורצע דראמע-פילמען — א טיפע דאקומענטאר</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/z7-doc.jpg" src="https://eli-z7-doc.sites.tab.bot/dl/z7-doc.mp4?play"></video></div>
+<p class="meta">4 שעה 37 מינוט · <span dir="ltr">159 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 26 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-z7-doc.sites.tab.bot/dl/z7-doc.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער געהיימער בעל הבית — אויף אידיש</h2>
+<div class="vwrap tall" style="aspect-ratio:360/640;width:min(100%,calc(58vh * 360 / 640))"><video controls playsinline preload="none" data-poster="/posters/z6-yiddish.jpg" src="https://eli-mayses.sites.tab.bot/dl/z6-yiddish.mp4?play"></video></div>
+<p class="meta">1 שעה 8 מינוט · <span dir="ltr">33 MB</span> · אידיש</p>
+<p class="sent">געשיקט: 25 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/z6-yiddish.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער באהאלטענער האר פונעם האפן — אויף אידיש</h2>
+<div class="vwrap tall" style="aspect-ratio:360/640;width:min(100%,calc(58vh * 360 / 640))"><video controls playsinline preload="none" data-poster="/posters/z5-yiddish.jpg" src="https://eli-mayses.sites.tab.bot/dl/z5-yiddish.mp4?play"></video></div>
+<p class="meta">1 שעה 35 מינוט · <span dir="ltr">32 MB</span> · אידיש</p>
+<p class="sent">געשיקט: 25 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/z5-yiddish.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער געהיימער באלעבאס — ענגליש</h2>
+<div class="vwrap tall" style="aspect-ratio:360/640;width:min(100%,calc(58vh * 360 / 640))"><video controls playsinline preload="none" data-poster="/posters/z6-english.jpg" src="https://eli-mayses.sites.tab.bot/dl/z6-english.mp4?play"></video></div>
+<p class="meta">1 שעה · <span dir="ltr">32 MB</span> · ענגליש קול</p>
+<p class="sent">געשיקט: 25 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/z6-english.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער באהאלטענער האר פונעם האפן — ענגליש</h2>
+<div class="vwrap tall" style="aspect-ratio:360/640;width:min(100%,calc(58vh * 360 / 640))"><video controls playsinline preload="none" data-poster="/posters/z5-english.jpg" src="https://eli-mayses.sites.tab.bot/dl/z5-english.mp4?play"></video></div>
+<p class="meta">1 שעה 24 מינוט · <span dir="ltr">33 MB</span> · ענגליש קול</p>
+<p class="sent">געשיקט: 25 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/z5-english.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער קעניג אין גרויען מאנטל <span dir="ltr">(The King in the Grey Coat)</span></h2>
+<div class="vwrap tall" style="aspect-ratio:360/640;width:min(100%,calc(58vh * 360 / 640))"><video controls playsinline preload="none" data-poster="/posters/z4-king-grey-coat.jpg" src="https://eli-mayses.sites.tab.bot/dl/z4-king-grey-coat.mp4?play"></video></div>
+<p class="meta">1 שעה 9 מינוט · <span dir="ltr">33 MB</span> · ענגליש קול</p>
+<p class="sent">געשיקט: 25 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/z4-king-grey-coat.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער באהאלטענער קעניג <span dir="ltr">(The Hidden King)</span></h2>
+<div class="vwrap tall" style="aspect-ratio:360/640;width:min(100%,calc(58vh * 360 / 640))"><video controls playsinline preload="none" data-poster="/posters/z3-hidden-king.jpg" src="https://eli-mayses.sites.tab.bot/dl/z3-hidden-king.mp4?play"></video></div>
+<p class="meta">45 מינוט · <span dir="ltr">28 MB</span> · ענגליש קול</p>
+<p class="sent">געשיקט: 25 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/z3-hidden-king.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דאס קעניגליכע לעבן פון פרינץ אלעקסאנדער</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/royal-prince.jpg" src="https://eli-royal-prince.sites.tab.bot/dl/royal-prince.mp4?play"></video></div>
+<p class="meta">9 שעה 22 מינוט · <span dir="ltr">262 MB</span> · אלע 10 טיילן</p>
+<p class="sent">געשיקט: 25 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-royal-prince.sites.tab.bot/dl/royal-prince.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>צוריק פון גארנישט <span dir="ltr">(Back From Nothing)</span></h2>
+<div class="vwrap tall" style="aspect-ratio:360/640;width:min(100%,calc(58vh * 360 / 640))"><video controls playsinline preload="none" data-poster="/posters/z2-back-from-nothing.jpg" src="https://eli-mayses.sites.tab.bot/dl/z2-back-from-nothing.mp4?play"></video></div>
+<p class="meta">30 מינוט · <span dir="ltr">27 MB</span> · ענגליש קול</p>
+<p class="sent">געשיקט: 24 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/z2-back-from-nothing.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>20 מעשיות — איין ווידעא</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/20-stories.jpg" src="https://eli-20-mayses.sites.tab.bot/dl/20-stories.mp4?play"></video></div>
+<p class="meta">9 שעה 1 מינוט · <span dir="ltr">219 MB</span></p>
+<p class="sent">געשיקט: 22 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-20-mayses.sites.tab.bot/dl/20-stories.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2><span dir="ltr">Information Technology</span> — דער גאנצער דאקומענטאר</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/it-documentary.jpg" src="https://eli-mayses.sites.tab.bot/dl/it-documentary.mp4?play"></video></div>
+<p class="meta">10 שעה 33 מינוט · <span dir="ltr">211 MB</span> · ענגליש קול</p>
+<p class="sent">געשיקט: 22 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/it-documentary.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2><span dir="ltr">Cloud Storage</span> — דער גאנצער דאקומענטאר</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/cloud-storage.jpg" src="https://eli-mayses.sites.tab.bot/dl/cloud-storage.mp4?play"></video></div>
+<p class="meta">7 שעה 11 מינוט · <span dir="ltr">141 MB</span> · ענגליש קול</p>
+<p class="sent">געשיקט: 22 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/cloud-storage.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער גרויסער פילם — 57 מעשיות</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/r57-01.jpg" src="https://eli-mayses.sites.tab.bot/dl/r57-01.mp4?play"></video></div>
+<p class="meta">14 שעה 29 מינוט · <span dir="ltr">371 MB</span> · אידיש קול · 13 טיילן</p>
+<p class="sent">געשיקט: 21 אקטאבער</p>
+<p class="sec-note">דער פילם איז צו לאנג פאר איין ווידעא, דערפאר איז ער אין 13 טיילן (יעדער טייל בערך א שעה).</p>
+<p class="plabel">קלייבט א טייל (עס שפילט דא אויבן):</p><div class="pgrid"><button type="button" class="play part on" data-src="/dl/r57-01.mp4?play" data-label="1">▶ 1</button><button type="button" class="play part" data-src="/dl/r57-02.mp4?play" data-label="2">▶ 2</button><button type="button" class="play part" data-src="/dl/r57-03.mp4?play" data-label="3">▶ 3</button><button type="button" class="play part" data-src="/dl/r57-04.mp4?play" data-label="4">▶ 4</button><button type="button" class="play part" data-src="/dl/r57-05.mp4?play" data-label="5">▶ 5</button><button type="button" class="play part" data-src="/dl/r57-06.mp4?play" data-label="6">▶ 6</button><button type="button" class="play part" data-src="/dl/r57-07.mp4?play" data-label="7">▶ 7</button><button type="button" class="play part" data-src="/dl/r57-08.mp4?play" data-label="8">▶ 8</button><button type="button" class="play part" data-src="/dl/r57-09.mp4?play" data-label="9">▶ 9</button><button type="button" class="play part" data-src="/dl/r57-10.mp4?play" data-label="10">▶ 10</button><button type="button" class="play part" data-src="/dl/r57-11.mp4?play" data-label="11">▶ 11</button><button type="button" class="play part" data-src="/dl/r57-12.mp4?play" data-label="12">▶ 12</button><button type="button" class="play part" data-src="/dl/r57-13.mp4?play" data-label="13">▶ 13</button></div>
+<p class="plabel">אראפלאדן א טייל:</p><div class="pgrid"><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-01.mp4" download>⬇ 1</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-02.mp4" download>⬇ 2</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-03.mp4" download>⬇ 3</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-04.mp4" download>⬇ 4</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-05.mp4" download>⬇ 5</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-06.mp4" download>⬇ 6</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-07.mp4" download>⬇ 7</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-08.mp4" download>⬇ 8</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-09.mp4" download>⬇ 9</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-10.mp4" download>⬇ 10</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-11.mp4" download>⬇ 11</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-12.mp4" download>⬇ 12</a><a class="dl part" href="https://eli-mayses.sites.tab.bot/dl/r57-13.mp4" download>⬇ 13</a></div>
+</article>
+<article class="card">
+<h2>57 מעשיות — דער ערשטער דאקומענטאר</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/docu-57.jpg" src="https://eli-mayses.sites.tab.bot/dl/docu-57.mp4?play"></video></div>
+<p class="meta">6 שעה 49 מינוט · <span dir="ltr">159 MB</span> · אידיש קול</p>
+<p class="sent">געשיקט: 21 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/docu-57.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמאר — ר' זלמן לייב'ס קהלה</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/satmar-zl.jpg" src="https://eli-mayses.sites.tab.bot/dl/satmar-zl.mp4?play"></video></div>
+<p class="meta">4 שעה 57 מינוט · <span dir="ltr">127 MB</span> · אידיש קול · אלע 5 טיילן</p>
+<p class="sent">געשיקט: 21 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/satmar-zl.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>מענער פון שטארקייט — דריי גאנצע מעשיות</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/male-stories.jpg" src="https://eli-mayses.sites.tab.bot/dl/male-stories.mp4?play"></video></div>
+<p class="meta">5 שעה 8 מינוט · <span dir="ltr">124 MB</span> · אידיש קול</p>
+<p class="sent">געשיקט: 21 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/male-stories.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>צוויי מעשיות פון דער גרויסער שטאט</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/two-stories.jpg" src="https://eli-mayses.sites.tab.bot/dl/two-stories.mp4?play"></video></div>
+<p class="meta">4 שעה 42 מינוט · <span dir="ltr">118 MB</span> · אידיש קול</p>
+<p class="sent">געשיקט: 21 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/two-stories.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמאר — א וועלט פאר זיך</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/satmar-yiddish.jpg" src="https://eli-mayses.sites.tab.bot/dl/satmar-yiddish.mp4?play"></video></div>
+<p class="meta">12 שעה · <span dir="ltr">305 MB</span> · אידיש קול</p>
+<p class="sent">געשיקט: 21 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/satmar-yiddish.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2><span dir="ltr">2026 Honda CR-V EX</span> — דער קאמפלעטער אייגנטימער'ס גייד</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/crv-guide.jpg" src="https://eli-mayses.sites.tab.bot/dl/crv-guide.mp4?play"></video></div>
+<p class="meta">8 שעה 21 מינוט · <span dir="ltr">213 MB</span> · ענגליש קול, אידישע טעקסט</p>
+<p class="sent">געשיקט: 20 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/crv-guide.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער באהאלטענער קעניג — די גאנצע מעשה</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/stepback-king.jpg" src="https://eli-mayses.sites.tab.bot/dl/stepback-king.mp4?play"></video></div>
+<p class="meta">2 שעה 53 מינוט · <span dir="ltr">78 MB</span></p>
+<p class="sent">געשיקט: 20 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/stepback-king.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די באהאלטענע קעניגן — אויף ענגליש</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/hidden-kings-english.jpg" src="https://eli-mayses.sites.tab.bot/dl/hidden-kings-english.mp4?play"></video></div>
+<p class="meta">3 שעה 19 מינוט · <span dir="ltr">75 MB</span> · ענגליש קול, אידישע ווערטער · אלע 3 טיילן</p>
+<p class="sent">געשיקט: 20 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/hidden-kings-english.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די באהאלטענע קעניגן — דרייצן מעשיות</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/hidden-kings.jpg" src="https://eli-mayses.sites.tab.bot/dl/hidden-kings.mp4?play"></video></div>
+<p class="meta">4 שעה 25 מינוט · <span dir="ltr">96 MB</span></p>
+<p class="sent">געשיקט: 20 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/hidden-kings.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2><span dir="ltr">AI</span> געצייג — דער גרויסער פראקטישער וועגווייזער</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/ai-tools2.jpg" src="https://eli-mayses.sites.tab.bot/dl/ai-tools2.mp4?play"></video></div>
+<p class="meta">6 שעה 6 מינוט · <span dir="ltr">141 MB</span></p>
+<p class="sent">געשיקט: 20 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/ai-tools2.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די צווילינג און זייער באהאלטענער טאטע</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/twins-70.jpg" src="https://eli-mayses.sites.tab.bot/dl/twins-70.mp4?play"></video></div>
+<p class="meta">1 שעה 10 מינוט · <span dir="ltr">25 MB</span> · אידיש קול</p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/twins-70.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>א טיפער אריינקוק אין קינסטלעכע אינטעליגענץ</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/ai-course.jpg" src="https://eli-mayses.sites.tab.bot/dl/ai-course.mp4?play"></video></div>
+<p class="meta">5 שעה 3 מינוט · <span dir="ltr">111 MB</span></p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/ai-course.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>א טיפער אריינקוק אין די וועלט פון <span dir="ltr">AI</span> געצייג</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/ai-tools.jpg" src="https://eli-mayses.sites.tab.bot/dl/ai-tools.mp4?play"></video></div>
+<p class="meta">3 שעה 31 מינוט · <span dir="ltr">77 MB</span></p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/ai-tools.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>אלע מעשיות</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/alle-mayses.jpg" src="https://eli-mayses.sites.tab.bot/dl/alle-mayses.mp4?play"></video></div>
+<p class="meta">49 שעה 32 מינוט · <span dir="ltr">1566 MB</span></p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/alle-mayses.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער פערארי אויף פיפט עוועניו</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/ferrari.jpg" src="https://eli-mayses.sites.tab.bot/dl/ferrari.mp4?play"></video></div>
+<p class="meta">2 שעה 37 מינוט · <span dir="ltr">113 MB</span></p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/ferrari.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>א מאמעס חשבון אין סיעטל</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/long1-seattle.jpg" src="https://eli-mayses.sites.tab.bot/dl/long1-seattle.mp4?play"></video></div>
+<p class="meta">2 שעה 22 מינוט · <span dir="ltr">55 MB</span> · אלע 2 טיילן</p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/long1-seattle.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די מתנה פון דער נאכט קעניגין — די לאנגע ווערסיע</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/night-queen-long.jpg" src="https://eli-mayses.sites.tab.bot/dl/night-queen-long.mp4?play"></video></div>
+<p class="meta">1 שעה 34 מינוט · <span dir="ltr">30 MB</span></p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/night-queen-long.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דזשעטעק פארומס — אידישע ווידעא</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/jtech.jpg" src="https://eli-mayses.sites.tab.bot/dl/jtech.mp4?play"></video></div>
+<p class="meta">50 מינוט · <span dir="ltr">57 MB</span> · אידיש קול · אלע 4 טיילן</p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/jtech.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמארע מאמענטן — אלע 3 חלקים אין איין ווידעא</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/satmar-momentn-all.jpg" src="https://eli-mayses.sites.tab.bot/dl/satmar-momentn-all.mp4?play"></video></div>
+<p class="meta">46 מינוט · <span dir="ltr">33 MB</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/satmar-momentn-all.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>19 מעשיות: די באהאלטענע מלכה</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/19-mayses.jpg" src="https://eli-mayses.sites.tab.bot/dl/19-mayses.mp4?play"></video></div>
+<p class="meta">4 שעה 19 מינוט · <span dir="ltr">266 MB</span></p>
+<p class="sent">געשיקט: 14 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/19-mayses.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער פארבארגענער טאטע פון די צווילינג</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/rev8-twins.jpg" src="https://eli-mayses.sites.tab.bot/dl/rev8-twins.mp4?play"></video></div>
+<p class="meta">30 מינוט · <span dir="ltr">35 MB</span> · אידיש קול · אלע 3 טיילן</p>
+<p class="sent">געשיקט: 14 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/rev8-twins.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>אלע 7 מעשיות</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/7-mayses.jpg" src="https://eli-mayses.sites.tab.bot/dl/7-mayses.mp4?play"></video></div>
+<p class="meta">3 שעה 58 מינוט · <span dir="ltr">178 MB</span></p>
+<p class="sent">געשיקט: 14 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/7-mayses.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די פארבארגענע יורשטע</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/elena.jpg" src="https://eli-mayses.sites.tab.bot/dl/elena.mp4?play"></video></div>
+<p class="meta">55 מינוט · <span dir="ltr">69 MB</span> · אידיש קול · אלע 4 טיילן</p>
+<p class="sent">געשיקט: 13 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/elena.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>פון הויזפרוי צו ביזנעס-קעניגין</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/biz-queen.jpg" src="https://eli-mayses.sites.tab.bot/dl/biz-queen.mp4?play"></video></div>
+<p class="meta">2 שעה 38 מינוט · <span dir="ltr">191 MB</span> · אידיש קול · אלע 12 טיילן</p>
+<p class="sent">געשיקט: 13 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/biz-queen.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>גוטע AI טולס און וועבסייטס — פון „אידישע וועלט“</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/ivelt-ai.jpg" src="https://eli-mayses.sites.tab.bot/dl/ivelt-ai.mp4?play"></video></div>
+<p class="meta">2 שעה 49 מינוט · <span dir="ltr">167 MB</span> · אידיש קול · אלע 15 טיילן</p>
+<p class="sent">געשיקט: 12 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/ivelt-ai.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>א רייזע דורך א וועלט פון קעניגליכן הדר — דער פרינץ</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/prince-yiddish.jpg" src="https://eli-mayses.sites.tab.bot/dl/prince-yiddish.mp4?play"></video></div>
+<p class="meta">3 שעה 33 מינוט · <span dir="ltr">179 MB</span> · אידיש קול · אלע 13 טיילן</p>
+<p class="sent">געשיקט: 11 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/prince-yiddish.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<h3>קורצע ווידעאס (21)</h3>
+<p class="sec-note">ווידעאס קירצער ווי 20 מינוט · די נייסטע אויבן</p>
+<article class="card">
+<h2>קעניגליכער ווידעא 3 — די רייזע</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/royal-video-3.jpg" src="https://eli-mayses.sites.tab.bot/dl/royal-video-3.mp4?play"></video></div>
+<p class="meta">5 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 17 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/royal-video-3.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמאר מאמענטן 3</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v15.jpg" src="https://eli-mayses.sites.tab.bot/dl/v15.mp4?play"></video></div>
+<p class="meta">15 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v15.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2><span dir="ltr">9to5Google</span></h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v16.jpg" src="https://eli-mayses.sites.tab.bot/dl/v16.mp4?play"></video></div>
+<p class="meta">15 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v16.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמאר מאמענטן 2</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v14.jpg" src="https://eli-mayses.sites.tab.bot/dl/v14.mp4?play"></video></div>
+<p class="meta">14 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v14.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמאר מאמענטן 1</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v13.jpg" src="https://eli-mayses.sites.tab.bot/dl/v13.mp4?play"></video></div>
+<p class="meta">15 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v13.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמאר מאמענטן</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v12.jpg" src="https://eli-mayses.sites.tab.bot/dl/v12.mp4?play"></video></div>
+<p class="meta">14 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v12.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>סאטמאר נייעס</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v11.jpg" src="https://eli-mayses.sites.tab.bot/dl/v11.mp4?play"></video></div>
+<p class="meta">14 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v11.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער טאטע איז דער קעניג</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v10.jpg" src="https://eli-mayses.sites.tab.bot/dl/v10.mp4?play"></video></div>
+<p class="meta">14 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v10.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער באהאלטענער טאטע</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v09.jpg" src="https://eli-mayses.sites.tab.bot/dl/v09.mp4?play"></video></div>
+<p class="meta">13 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v09.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער פויער-קעניג</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v08.jpg" src="https://eli-mayses.sites.tab.bot/dl/v08.mp4?play"></video></div>
+<p class="meta">11 מינוט · <span dir="ltr">13 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v08.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>רירט נישט אן מיין זון</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v07.jpg" src="https://eli-mayses.sites.tab.bot/dl/v07.mp4?play"></video></div>
+<p class="meta">13 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v07.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דעם שומר'ס סוד</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v06.jpg" src="https://eli-mayses.sites.tab.bot/dl/v06.mp4?play"></video></div>
+<p class="meta">14 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v06.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער שאטן פון סילווער קריק</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v05.jpg" src="https://eli-mayses.sites.tab.bot/dl/v05.mp4?play"></video></div>
+<p class="meta">13 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v05.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>קעניגליכער ווידעא 2</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v04.jpg" src="https://eli-mayses.sites.tab.bot/dl/v04.mp4?play"></video></div>
+<p class="meta">4 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v04.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>די באהאלטענע מלכה</h2>
+<div class="vwrap tall" style="aspect-ratio:540/720;width:min(100%,calc(58vh * 540 / 720))"><video controls playsinline preload="none" data-poster="/posters/v03.jpg" src="https://eli-mayses.sites.tab.bot/dl/v03.mp4?play"></video></div>
+<p class="meta">13 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v03.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>אידיש דאבינג</h2>
+<div class="vwrap tall" style="aspect-ratio:478/850;width:min(100%,calc(58vh * 478 / 850))"><video controls playsinline preload="none" data-poster="/posters/v02.jpg" src="https://eli-mayses.sites.tab.bot/dl/v02.mp4?play"></video></div>
+<p class="meta">7 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v02.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>קעניגליכער ווידעא 1</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/v01.jpg" src="https://eli-mayses.sites.tab.bot/dl/v01.mp4?play"></video></div>
+<p class="meta">4 מינוט · <span dir="ltr">14 MB</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/v01.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער פרינץ — אלע 35 אין איין ווידעא</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/prince-35-max.jpg" src="https://eli-mayses.sites.tab.bot/dl/prince-35-max.mp4?play"></video></div>
+<p class="meta">3 מינוט · <span dir="ltr">13 MB</span> · אן קול</p>
+<p class="sent">געשיקט: 13 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/prince-35-max.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער פרינץ רעדט — 12 סצענעס</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/prince-talking.jpg" src="https://eli-mayses.sites.tab.bot/dl/prince-talking.mp4?play"></video></div>
+<p class="meta">2 מינוט · <span dir="ltr">15 MB</span></p>
+<p class="sent">געשיקט: 6 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/prince-talking.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער פרינץ — אלע 35 בילדער, מיט מוזיק</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/prince-35-film.jpg" src="https://eli-mayses.sites.tab.bot/dl/prince-35-film.mp4?play"></video></div>
+<p class="meta">2 מינוט · <span dir="ltr">13 MB</span></p>
+<p class="sent">געשיקט: 6 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/prince-35-film.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card">
+<h2>דער פרינץ — אלע 20 סצענעס</h2>
+<div class="vwrap"><video controls playsinline preload="none" data-poster="/posters/prince-20-fullhd.jpg" src="https://eli-mayses.sites.tab.bot/dl/prince-20-fullhd.mp4?play"></video></div>
+<p class="meta">3 מינוט · <span dir="ltr">31 MB</span> · <span dir="ltr">Full HD</span></p>
+<p class="sent">געשיקט: 5 אקטאבער</p>
+<div class="btns"><a class="dl" href="https://eli-mayses.sites.tab.bot/dl/prince-20-fullhd.mp4" download>⬇ אראפלאדן</a></div>
+</article>
+<h3 id="pdfs">ביכלעך און PDF־ס (20)</h3>
+<p class="sec-note">אלע PDF־ס וואס איך האב דיר געשיקט · די נייסטע אויבן</p>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-original-mayse.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-original-mayse.jpg" loading="lazy" alt="" width="300" height="426"></a><div class="pinfo">
+<h2>די פרוי וואס האט עס אויפגעבויט — די אריגינעלע מעשה</h2>
+<p class="meta">42 זייטן · <span dir="ltr">0.1 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 27 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-original-mayse.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-original-mayse.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-man-who-built-it.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-man-who-built-it.jpg" loading="lazy" alt="" width="300" height="426"></a><div class="pinfo">
+<h2>דער מאן וואס האט עס אויפגעבויט</h2>
+<p class="meta">120 זייטן · <span dir="ltr">0.3 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 27 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-man-who-built-it.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-man-who-built-it.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-crv-guide.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-crv-guide.jpg" loading="lazy" alt="" width="300" height="389"></a><div class="pinfo">
+<h2><span dir="ltr">2026 Honda CR-V EX</span> — דער גרויסער וועגווייזער אויף אידיש</h2>
+<p class="meta">488 זייטן · <span dir="ltr">15 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 21 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-crv-guide.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-crv-guide.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-tsviling.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-tsviling.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>די צווילינג און זייער באהאלטענער טאטע</h2>
+<p class="meta">43 זייטן · <span dir="ltr">0.1 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 19 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-tsviling.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-tsviling.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-mitmachim.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-mitmachim.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>מתמחים טופ — מחשבים און טעכנאלאגיע</h2>
+<p class="meta">154 זייטן · <span dir="ltr">2.2 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-mitmachim.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-mitmachim.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-jtech.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-jtech.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>דזשעטעק פארומס — כשר'ע טעכנאלאגיע</h2>
+<p class="meta">165 זייטן · <span dir="ltr">2.0 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-jtech.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-jtech.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-ivelt-8.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-ivelt-8.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>מילתא דבדיחותא — פון „אידישע וועלט“</h2>
+<p class="meta">123 זייטן · <span dir="ltr">3.5 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-ivelt-8.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-ivelt-8.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-ivelt-32496.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-ivelt-32496.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>הרה"ג ר' אברהם מרדכי מלאך שליט"א — פון „אידישע וועלט“</h2>
+<p class="meta">99 זייטן · <span dir="ltr">3.8 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-ivelt-32496.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-ivelt-32496.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-ivelt-84017.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-ivelt-84017.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>דעת רבינו הקדוש מסאטמאר איבער משפיעים — פון „אידישע וועלט“</h2>
+<p class="meta">99 זייטן · <span dir="ltr">0.9 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-ivelt-84017.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-ivelt-84017.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-tech-leaks.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-tech-leaks.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2><span dir="ltr">Tech Leaks Zone</span> — א טיפער איבערבליק</h2>
+<p class="meta">69 זייטן · <span dir="ltr">2.4 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 16 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-tech-leaks.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-tech-leaks.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-12-mayses-bilder.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-12-mayses-bilder.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>צוועלף מעשיות פון באהאלטענע טאטעס און מאמעס — מיט בילדער</h2>
+<p class="meta">884 זייטן · <span dir="ltr">10 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-12-mayses-bilder.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-12-mayses-bilder.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-6-mayses-bilder.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-6-mayses-bilder.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>זעקס מעשיות פון באהאלטענע טאטעס — מיט בילדער</h2>
+<p class="meta">419 זייטן · <span dir="ltr">6.8 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-6-mayses-bilder.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-6-mayses-bilder.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-6-mayses.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-6-mayses.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>זעקס מעשיות פון באהאלטענע טאטעס</h2>
+<p class="meta">364 זייטן · <span dir="ltr">1.1 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-6-mayses.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-6-mayses.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-shita-hakdoshe.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-shita-hakdoshe.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>שיטה הקדושה — מיט בילדער</h2>
+<p class="meta">13 זייטן · <span dir="ltr">0.8 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-shita-hakdoshe.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-shita-hakdoshe.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-malke-bilder.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-malke-bilder.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>די באהאלטענע מלכה — מיט בילדער</h2>
+<p class="meta">53 זייטן · <span dir="ltr">1.4 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-malke-bilder.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-malke-bilder.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-bahaltener-kenig.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-bahaltener-kenig.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>דער באהאלטענער קעניג</h2>
+<p class="meta">72 זייטן · <span dir="ltr">0.2 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-bahaltener-kenig.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-bahaltener-kenig.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-bahaltene-malke.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-bahaltene-malke.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>די באהאלטענע מלכה</h2>
+<p class="meta">42 זייטן · <span dir="ltr">0.1 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-bahaltene-malke.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-bahaltene-malke.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-malke-kumt-tzurik.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-malke-kumt-tzurik.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>די מלכה קומט צוריק</h2>
+<p class="meta">62 זייטן · <span dir="ltr">0.1 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 15 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-malke-kumt-tzurik.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-malke-kumt-tzurik.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-19-mayses.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-19-mayses.jpg" loading="lazy" alt="" width="300" height="450"></a><div class="pinfo">
+<h2>19 מעשיות: די באהאלטענע מלכה</h2>
+<p class="meta">159 זייטן · <span dir="ltr">0.4 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 14 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-19-mayses.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-19-mayses.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+<article class="card pdf">
+<div class="prow"><a class="pcov" href="dl/pdf-ivelt-ai-tools.pdf%3Fplay" target="_blank" rel="noopener"><img src="posters/pdf-ivelt-ai-tools.jpg" loading="lazy" alt="" width="300" height="425"></a><div class="pinfo">
+<h2>גוטע <span dir="ltr">AI</span> טולס און וועבסייטס — אלע 199 בלעטער פון „אידישע וועלט“</h2>
+<p class="meta">2074 זייטן · <span dir="ltr">15 MB</span> · <span dir="ltr">PDF</span></p>
+<p class="sent">געשיקט: 12 אקטאבער</p>
+</div></div>
+<div class="btns"><a class="openpdf" href="dl/pdf-ivelt-ai-tools.pdf%3Fplay" target="_blank" rel="noopener">📖 עפענען</a><a class="dl" href="dl/pdf-ivelt-ai-tools.pdf" download>⬇ אראפלאדן</a></div>
+</article>
+</main>
+<script>
+(function(){
+  var vids=[].slice.call(document.querySelectorAll('video[data-poster]'));
+  function showPoster(v){ if(!v.getAttribute('poster')) v.setAttribute('poster', v.dataset.poster); }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ showPoster(e.target); io.unobserve(e.target); } }); },{rootMargin:'800px 0px'});
+    vids.forEach(function(v){ io.observe(v); });
+  } else vids.forEach(showPoster);
+  // only one video plays at a time
+  document.addEventListener('play',function(e){
+    vids.forEach(function(v){ if(v!==e.target && !v.paused) v.pause(); });
+  },true);
+  // a video that cannot play here gets a small plain link
+  vids.forEach(function(v){
+    v.addEventListener('error',function(){ var c=v.closest('.card'); var f=c.querySelector('.vfail'); if(!f){ f=document.createElement('p'); f.className='vfail'; f.innerHTML='<a target="_blank" rel="noopener">עפענען דעם ווידעא באזונדער ↗</a>'; v.parentNode.insertAdjacentElement('afterend',f); } f.firstChild.href=v.currentSrc||v.getAttribute('src'); f.style.display='block'; });
+  });
+  // long film in parts: a part button loads that part into the card's own player
+  document.querySelectorAll('.play.part').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var card=btn.closest('.card'), v=card.querySelector('video');
+      card.querySelectorAll('.play.part').forEach(function(b){ b.classList.remove('on'); });
+      btn.classList.add('on');
+      if(v.getAttribute('src')!==btn.dataset.src){ v.setAttribute('src',btn.dataset.src); v.load(); }
+      var p=v.play(); if(p&&p.catch) p.catch(function(){});
+      v.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  });
+  // full screen: turn the phone sideways when the film goes full screen (Android Chrome)
+  document.addEventListener('fullscreenchange',function(){
+    var o=screen.orientation;
+    if(!o||!o.lock) return;
+    if(document.fullscreenElement && document.fullscreenElement.tagName==='VIDEO'){ o.lock('landscape').catch(function(){}); }
+    else if(!document.fullscreenElement && o.unlock){ try{ o.unlock(); }catch(e){} }
+  });
+  var standalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone;
+  if(standalone) document.getElementById('install').style.display='none';
+  var deferred=null, ib=document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferred=e; ib.style.display='block'; });
+  ib.addEventListener('click',function(){ if(!deferred) return; deferred.prompt(); deferred.userChoice.finally(function(){ deferred=null; ib.style.display='none'; }); });
+  if('serviceWorker' in navigator) window.addEventListener('load',function(){ navigator.serviceWorker.register('/sw.js').catch(function(){}); });
+})();
+</script>
+</body>
+</html>
