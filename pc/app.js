@@ -98,7 +98,7 @@ $("#clock").onclick=e=>{e.stopPropagation();if(!fly.hidden&&fly.dataset.k==="clo
  fly.dataset.k="clock";fly.innerHTML=`<div class="big">${d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</div><div class="dl">${d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}</div><div class="hd">${esc(hebDate(d))}</div>`;fly.style.right="8px";fly.style.left="auto";fly.hidden=false};
 
 /* ---------- desktop ---------- */
-const PINS=["https://pin-siddur.sites.tab.bot/","https://isaac-tab-chat.sites.tab.bot/","https://isaac-ivelt-live-app.sites.tab.bot/"];
+const PINS=["https://the8040it.github.io/pin-sites/siddur/","https://the8040it.github.io/pin-sites/isaac-tab-chat/","https://the8040it.github.io/pin-sites/isaac-ivelt-live-app/"];
 const desk=$("#desktop");
 function renderDesk(){
  const items=[{t:"This PC",ic:APPI.pc,act:()=>Explorer()},{t:"Browser",ic:APPI.browser,act:()=>Browser()}];
