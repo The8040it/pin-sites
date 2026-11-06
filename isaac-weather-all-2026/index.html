@@ -1,0 +1,96 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Weather All · וועטער</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b1430"><link rel="icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden}
+body{font-family:system-ui,-apple-system,Roboto,sans-serif;color:#f4f1ea;min-height:100vh;background:linear-gradient(160deg,var(--a,#0b1430),var(--b,#1d2b5c) 60%,#0b1430);background-attachment:fixed;transition:background 1s}
+.wrap{max-width:760px;margin:0 auto;padding:14px 12px 40px}
+header{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h1{font-size:20px;margin:0;color:#e8c26a;letter-spacing:.5px;flex:1}
+button,input{font:inherit;min-height:44px;border-radius:12px;border:1px solid rgba(232,194,106,.4);background:rgba(255,255,255,.08);color:#f4f1ea;padding:0 12px}
+button{cursor:pointer}button.on{background:#e8c26a;color:#0b1430}
+.card{background:rgba(255,255,255,.07);backdrop-filter:blur(10px);border:1px solid rgba(232,194,106,.25);border-radius:20px;padding:16px;margin-top:14px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+.hero{text-align:center}.big{font-size:72px;font-weight:200;line-height:1}.ico{font-size:56px}
+.row{display:flex;justify-content:space-around;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:14px;opacity:.9}
+h2{font-size:15px;color:#e8c26a;margin:0 0 10px;font-weight:600}
+.tbl{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:7px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08)}th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:#16224a}
+tr.cons td{color:#e8c26a;font-weight:700}.hi{color:#ffd9a0}.lo{color:#a8c8ff}.rp{color:#8fd3ff;font-size:11px}
+.agree{font-size:11px}.alert{background:rgba(200,30,40,.85);border-color:#ff8080}
+.search{display:flex;gap:6px;margin-top:10px}.search input{flex:1;min-width:0}
+#res button{display:block;width:100%;text-align:left;margin-top:4px}
+canvas{width:100%;height:220px}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.chips button{min-height:36px;font-size:12px;padding:0 10px}
+.small{font-size:12px;opacity:.75}.nws p{margin:6px 0;font-size:14px;line-height:1.4}
+.yi{font-family:"Frank Ruhl Libre",serif;direction:rtl}
+@media(max-width:420px){.big{font-size:60px}}
+</style></head><body><div class="wrap">
+<header><h1>☀ Weather All <span class="yi">· וועטער</span></h1><button id="unit">°F</button><button id="ref" title="Refresh">⟳</button></header>
+<div class="search"><input id="q" placeholder="City / שטאט…"><button id="go">🔍</button><button id="me">📍</button></div><div id="res"></div>
+<div id="app"><div class="card">Loading… <span class="yi">לאדנט…</span></div></div>
+<p class="small" style="margin-top:18px">Data: ECMWF (Europe), NOAA GFS & NBM (USA), DWD ICON (Germany), GEM (Canada), Met Office (UK), JMA (Japan), Météo-France — via Open-Meteo · Official forecast & alerts: National Weather Service. No ads, no tracking.</p>
+</div>
+<script>
+const M=[["ecmwf_ifs025","ECMWF 🇪🇺"],["gfs_seamless","NOAA GFS 🇺🇸"],["ncep_nbm_conus","NOAA NBM 🇺🇸"],["icon_seamless","DWD ICON 🇩🇪"],["gem_seamless","Canada GEM 🇨🇦"],["ukmo_seamless","UK Met Office 🇬🇧"],["jma_seamless","Japan JMA 🇯🇵"],["meteofrance_seamless","Météo-France 🇫🇷"]];
+let L=JSON.parse(localStorage.wxLoc||'{"lat":41.1112,"lon":-74.0685,"name":"Monsey, NY"}'),F=localStorage.wxU!=='C',D=null,NW=null,AL=[],ON=new Set(M.map(m=>m[0]));
+const $=id=>document.getElementById(id);
+const WC=c=>c==null?"·":c==0?"☀️":c<=2?"🌤️":c==3?"☁️":c<=48?"🌫️":c<=57?"🌦️":c<=67?"🌧️":c<=77?"🌨️":c<=82?"🌧️":c<=86?"🌨️":"⛈️";
+const WT=c=>c==0?"Clear · קלאר":c<=2?"Partly cloudy · טייל וואלקנס":c==3?"Cloudy · וואלקנס":c<=48?"Fog · נעפל":c<=67?"Rain · רעגן":c<=77?"Snow · שניי":c<=82?"Showers · שוי'ערס":c<=86?"Snow showers · שניי":"Thunderstorm · דונער";
+const T=v=>v==null?"–":Math.round(F?v*9/5+32:v)+"°";const W=v=>v==null?"–":Math.round(F?v*.621:v)+(F?" mph":" km/h");
+const avg=a=>{a=a.filter(x=>x!=null&&!isNaN(x));return a.length?a.reduce((s,x)=>s+x,0)/a.length:null};
+function err(m){$('app').innerHTML='<div class="card alert">⚠ '+m+'<br><button onclick="load()">Try again · נאכאמאל</button></div>'}
+window.onerror=(m)=>{err('Something went wrong: '+m)};
+async function load(){
+ try{$('app').innerHTML='<div class="card">Loading… <span class="yi">לאדנט…</span></div>';
+ const v='temperature_2m,precipitation_probability,precipitation,weather_code,wind_speed_10m';
+ const u=`https://api.open-meteo.com/v1/forecast?latitude=${L.lat}&longitude=${L.lon}&models=${M.map(m=>m[0]).join(',')}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,is_day&hourly=temperature_2m,precipitation_probability,weather_code&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,weather_code,sunrise,sunset&timezone=auto&forecast_days=7`;
+ const r=await fetch(u);if(!r.ok)throw Error('forecast '+r.status);D=await r.json();localStorage.wxLast=JSON.stringify(D);
+ }catch(e){if(localStorage.wxLast){D=JSON.parse(localStorage.wxLast)}else return err('Could not load the forecast (offline?) · '+e.message)}
+ NW=null;AL=[];
+ try{const p=await (await fetch(`https://api.weather.gov/points/${(+L.lat).toFixed(4)},${(+L.lon).toFixed(4)}`)).json();
+  const f=await (await fetch(p.properties.forecast)).json();NW=f.properties.periods.slice(0,6);
+  const a=await (await fetch(`https://api.weather.gov/alerts/active?point=${(+L.lat).toFixed(4)},${(+L.lon).toFixed(4)}`)).json();AL=a.features||[];}catch(e){}
+ render()}
+function get(sec,key,m){const o=D[sec];return o[key+'_'+m]||o[key]}
+function render(){
+ const c=D.current,cm=k=>avg(M.map(m=>c[k+'_'+m[0]]??null).concat(c[k]!=null?[c[k]]:[]));
+ const code=Math.round(avg(M.map(m=>c['weather_code_'+m[0]]).filter(x=>x!=null)) ?? 0), mc=M.map(m=>c['weather_code_'+m[0]]).filter(x=>x!=null);
+ const cd=mc.length?mc.sort((a,b)=>mc.filter(x=>x==b).length-mc.filter(x=>x==a).length)[0]:code;
+ const day=(c['is_day_'+M[0][0]]??c.is_day??1);
+ document.body.style.setProperty('--a',day?(cd>=51?'#2b3a5a':'#1e4f8f'):'#070b1f');document.body.style.setProperty('--b',day?(cd>=51?'#55657f':'#5a9be0'):'#1b2552');
+ let h='';
+ if(AL.length)h+=AL.map(a=>`<div class="card alert"><b>⚠ ${a.properties.event}</b><div class="small" style="opacity:1">${a.properties.headline||''}</div></div>`).join('');
+ const dl=D.daily,tm=dl.time;
+ h+=`<div class="card hero"><div class="small">${L.name}</div><div class="ico">${(!day&&cd<=2)?"🌙":WC(cd)}</div><div class="big">${T(cm('temperature_2m'))}</div><div>${WT(cd)}</div>
+ <div class="row"><span>Feels · פילט ${T(cm('apparent_temperature'))}</span><span>💧 ${Math.round(cm('relative_humidity_2m')??0)}%</span><span>💨 ${W(cm('wind_speed_10m'))}</span></div>
+ <div class="row"><span>🌅 ${(get('daily','sunrise',M[0][0])||[''])[0].slice(11)}</span><span>🌇 ${(get('daily','sunset',M[0][0])||[''])[0].slice(11)}</span><span class="small">Average of ${M.length} forecasts</span></div></div>`;
+ // 7 day table
+ const dn=t=>new Date(t+'T12:00').toLocaleDateString('en-US',{weekday:'short'});
+ let tb='<tr><th>Forecast</th>'+tm.map(t=>`<th>${dn(t)}</th>`).join('')+'</tr>';
+ const rows=M.map(m=>{const hi=get('daily','temperature_2m_max',m[0]),lo=get('daily','temperature_2m_min',m[0]),pp=get('daily','precipitation_probability_max',m[0]),wc=get('daily','weather_code',m[0]);return {m,hi,lo,pp,wc}}).filter(r=>r.hi&&r.hi.some(x=>x!=null));
+ rows.forEach(r=>{tb+=`<tr><td>${r.m[1]}</td>`+tm.map((t,i)=>`<td>${WC(r.wc?.[i])}<br><span class="hi">${T(r.hi[i])}</span> <span class="lo">${T(r.lo[i])}</span>${r.pp&&r.pp[i]!=null?`<br><span class="rp">${r.pp[i]}%</span>`:''}</td>`).join('')+'</tr>'});
+ tb+='<tr class="cons"><td>★ Average · דורכשניט</td>'+tm.map((t,i)=>{const his=rows.map(r=>r.hi[i]).filter(x=>x!=null),sp=Math.max(...his)-Math.min(...his);
+   return `<td><span class="hi">${T(avg(his))}</span> <span class="lo">${T(avg(rows.map(r=>r.lo[i])))}</span><br><span class="agree">${sp<=2?'✅ agree':sp<=5?'≈ close':'⚠ differ'}</span></td>`}).join('')+'</tr>';
+ h+=`<div class="card"><h2>7 days — every forecast · 7 טעג — אלע פראגנאזן</h2><div class="tbl"><table>${tb}</table></div><div class="small">High / low · rain chance. "Agree" = all forecasts within ${F?'4°F':'2°C'}.</div></div>`;
+ h+=`<div class="card"><h2>Next 48 hours · קומענדיגע 48 שעה</h2><div class="chips">${M.map(m=>`<button data-m="${m[0]}" class="${ON.has(m[0])?'on':''}">${m[1]}</button>`).join('')}</div><canvas id="cv" width="720" height="260"></canvas></div>`;
+ if(NW)h+=`<div class="card nws"><h2>National Weather Service · אפיציעל</h2>${NW.map(p=>`<p><b>${p.name}:</b> ${p.detailedForecast}</p>`).join('')}</div>`;
+ h+=`<div class="small" style="margin-top:10px">Updated · דערהיינטיגט ${new Date().toLocaleTimeString()}</div>`;
+ $('app').innerHTML=h;
+ document.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{ON.has(b.dataset.m)?ON.delete(b.dataset.m):ON.add(b.dataset.m);render()});
+ chart()}
+function chart(){const cv=$('cv');if(!cv)return;const x=cv.getContext('2d'),W_=cv.width,H=cv.height;x.clearRect(0,0,W_,H);
+ const now=D.hourly.time.findIndex(t=>new Date(t)>=new Date(Date.now()-3600e3)),s=Math.max(0,now),e=s+48;
+ const cols=['#e8c26a','#ff8f6b','#ffb3c7','#8fd3ff','#9be89b','#c9a0ff','#ffe08a','#7fe0d0'];
+ let all=[];M.forEach(m=>{if(ON.has(m[0])){const a=(get('hourly','temperature_2m',m[0])||[]).slice(s,e);all=all.concat(a.filter(v=>v!=null))}});if(!all.length)return;
+ const conv=v=>F?v*9/5+32:v,mn=Math.floor(conv(Math.min(...all)))-2,mx=Math.ceil(conv(Math.max(...all)))+2,X=i=>30+i*(W_-40)/47,Y=v=>H-25-(conv(v)-mn)/(mx-mn)*(H-45);
+ x.fillStyle='rgba(255,255,255,.6)';x.font='12px sans-serif';for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4,y=H-25-k/4*(H-45);x.fillText(Math.round(v)+'°',0,y+4);x.fillStyle='rgba(255,255,255,.08)';x.fillRect(30,y,W_-40,1);x.fillStyle='rgba(255,255,255,.6)'}
+ for(let i=0;i<48;i+=6){const t=D.hourly.time[s+i];if(t)x.fillText(new Date(t).toLocaleTimeString('en-US',{hour:'numeric'}),X(i)-10,H-6)}
+ M.forEach((m,j)=>{if(!ON.has(m[0]))return;const a=(get('hourly','temperature_2m',m[0])||[]).slice(s,e);x.strokeStyle=cols[j];x.lineWidth=2;x.beginPath();let st=0;a.forEach((v,i)=>{if(v==null)return;st?x.lineTo(X(i),Y(v)):(x.moveTo(X(i),Y(v)),st=1)});x.stroke()})}
+$('unit').textContent=F?'°F':'°C';$('unit').onclick=()=>{F=!F;localStorage.wxU=F?'F':'C';$('unit').textContent=F?'°F':'°C';D&&render()};
+$('ref').onclick=load;
+$('go').onclick=async()=>{try{const q=$('q').value.trim();if(!q)return;const r=await (await fetch('https://geocoding-api.open-meteo.com/v1/search?count=5&name='+encodeURIComponent(q))).json();
+ $('res').innerHTML=(r.results||[]).map(p=>`<button data-l='${JSON.stringify({lat:p.latitude,lon:p.longitude,name:p.name+', '+(p.admin1||p.country||'')}).replace(/'/g,"&#39;")}'>${p.name}, ${p.admin1||''} ${p.country||''}</button>`).join('')||'<div class="small">Not found</div>';
+ document.querySelectorAll('#res button').forEach(b=>b.onclick=()=>{L=JSON.parse(b.dataset.l);localStorage.wxLoc=JSON.stringify(L);$('res').innerHTML='';load()})}catch(e){$('res').innerHTML='<div class="small">Search failed</div>'}};
+$('q').onkeydown=e=>{if(e.key==='Enter')$('go').click()};
+$('me').onclick=()=>navigator.geolocation.getCurrentPosition(p=>{L={lat:p.coords.latitude,lon:p.coords.longitude,name:'My location · מיין ארט'};localStorage.wxLoc=JSON.stringify(L);load()},()=>alert('Location not allowed'));
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+load();
+</script></body></html>
