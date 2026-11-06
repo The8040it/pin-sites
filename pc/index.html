@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>PC</title>
+<meta name="description" content="Pin's PC — a Windows-style desktop for all his links">
+<meta name="theme-color" content="#0a1a3d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css?v=9">
+</head>
+<body>
+<div id="wall" class="wall" aria-hidden="true"></div>
+<main id="desktop" class="desktop" aria-label="Desktop"></main>
+<div id="wins" class="wins"></div>
+
+<section id="start" class="start" hidden aria-label="Start">
+  <div class="st-search"><svg class="ico" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+    <input id="sq" type="search" placeholder="Search apps, PDFs, links · זוכן" autocomplete="off" enterkeyhint="search" aria-label="Search">
+    <button id="sqx" class="x" type="button" aria-label="Clear" hidden>✕</button></div>
+  <div id="st-body" class="st-body"></div>
+  <div class="st-foot"><div class="user"><span class="avatar">♛</span><span>Pin</span></div>
+    <button id="power" class="pw" type="button" aria-label="Power"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg></button></div>
+</section>
+
+<div id="flyout" class="flyout" hidden></div>
+<div id="ctx" class="ctx" hidden></div>
+
+<footer id="taskbar" class="taskbar">
+  <div class="tb-center" id="tbc">
+    <button class="tbb start-btn" id="startBtn" type="button" aria-label="Start"><svg viewBox="0 0 24 24" class="win"><rect x="2" y="2" width="9.4" height="9.4" rx="1.2"/><rect x="12.6" y="2" width="9.4" height="9.4" rx="1.2"/><rect x="2" y="12.6" width="9.4" height="9.4" rx="1.2"/><rect x="12.6" y="12.6" width="9.4" height="9.4" rx="1.2"/></svg></button>
+    <button class="tbb" id="searchBtn" type="button" aria-label="Search"><svg class="ico" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button>
+    <div id="tbapps" class="tbapps"></div>
+  </div>
+  <button class="tray" id="clock" type="button" aria-label="Date and time"><span id="ctime"></span><span id="cdate"></span></button>
+</footer>
+<script src="data.js?v=9"></script>
+<script src="app.js?v=9"></script>
+</body>
+</html>
