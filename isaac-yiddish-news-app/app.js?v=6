@@ -1,0 +1,445 @@
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const main = $('#main'), chipsEl = $('#chips');
+const NEWS_CHIPS = [
+  ['home', 'הויפט'], ['news/57', 'בולעטין'], ['news/311', 'בליצן'], ['news/59', 'אלגעמיינע'], ['news/61', 'פאליטיק'],
+  ['news/97', 'ביזנעס'], ['news/58', 'אידישע נייעס'], ['news/260', 'הכל בכל'], ['news/138', 'וועטער'], ['news/310', 'קול מבשר'],
+  ['news/302', 'רשות הרבים'], ['news/271', 'אן-עדזש']
+];
+const MEDIA_CHIPS = [['shmisen', 'שמועסן'], ['video', 'ווידעא'], ['feed:ytjdn,onedge,latest,zeigez', '📺 יוטוב'], ['torah', 'תורה'], ['music', 'נגינה']];
+const NAMES = Object.fromEntries([...NEWS_CHIPS, ...MEDIA_CHIPS]);
+NAMES['news/57'] = 'בולעטין נייעס'; NAMES['news/311'] = 'בליצן נייעס'; NAMES['news/59'] = 'אלגעמיינע נייעס';
+const PAGINATE = k => /^news\//.test(k);
+const SOURCES = [
+  { key: 'y24', name: 'Yiddish24', short: 'Yiddish24', color: '#1B2E7A', def: true },
+  { key: 'jdn', name: 'JDN', short: 'JDN', color: '#1565C0', def: true },
+  { key: 'bch', name: 'בחצרות הקודש', short: 'בחצרות הקודש', color: '#7A4B2A', def: true },
+  { key: 'ablick', name: 'א בליק לייוו', short: 'א בליק', color: '#00796B', def: true },
+  { key: 'deryid', name: 'דער איד טעגליכע', short: 'דער איד', color: '#B71C1C', def: true },
+  { key: 'zemel', name: 'זעמל', short: 'זעמל', color: '#6A1B9A', def: true, tg: 1 },
+  { key: 'baketzer', name: 'בקיצור נייעס', short: 'בקיצור', color: '#C62828', def: true, tg: 1 },
+  { key: 'blitz', name: 'בליץ נייעס', short: 'בליץ', color: '#EF6C00', def: true, tg: 1 },
+  { key: 'tagliche', name: 'טעגליכע נייעס', short: 'טעגליכע', color: '#2E7D32', def: true, tg: 1 },
+  { key: 'vinkel', name: 'אידישער ווינקל', short: 'ווינקל', color: '#4E342E', def: true, tg: 1 },
+  { key: 'kremel', name: 'היימישע קרעמעל', short: 'קרעמעל', color: '#AD1457', def: true, tg: 1 },
+  { key: 'satmara', name: 'סאטמארע נייעס', short: 'סאטמארע', color: '#0D47A1', def: true, tg: 1 },
+  { key: 'betzeil', name: 'בצל הקודש סאטמאר', short: 'בצל הקודש', color: '#1B5E20', def: true, tg: 1 },
+  { key: 'smonsey', name: 'סאטמאר מאנסי', short: 'ס. מאנסי', color: '#00838F', def: true, tg: 1 },
+  { key: 'satbild', name: 'סאטמאר נייעס און בילדער', short: 'סאטמאר בילדער', color: '#283593', def: true, tg: 1 },
+  { key: 'viznitz', name: 'וויזניצע נייעס', short: 'וויזניץ', color: '#5D4037', def: true, tg: 1 },
+  { key: 'ytjdn', name: 'JDN ווידעא', short: 'JDN ווידעא', color: '#0B5394', def: true, yt: 1 },
+  { key: 'onedge', name: 'On Edge News', short: 'On Edge', color: '#37474F', def: true, yt: 1 },
+  { key: 'latest', name: 'Latest Talks פאדקעסט', short: 'Latest Talks', color: '#BF360C', def: true, yt: 1 },
+  { key: 'zeigez', name: 'זיי געזונט פאדקעסט', short: 'זיי געזונט', color: '#00695C', def: true, yt: 1 },
+  { key: 'eyisroel', name: 'נייעס אין ארץ ישראל', short: 'ארץ ישראל', color: '#607D8B', def: false, tg: 1 },
+  { key: 'forverts', name: 'פֿאָרווערטס', short: 'פֿאָרווערטס', color: '#546E7A', def: false }
+];
+const YT_KEYS = SOURCES.filter(s => s.yt).map(s => s.key);
+const SRC = Object.fromEntries(SOURCES.map(s => [s.key, s]));
+function srcOn() { const st = LS.get('yn.src', {}); return SOURCES.filter(s => st[s.key] !== undefined ? st[s.key] : s.def).map(s => s.key); }
+function setSrc(k, on) { const st = LS.get('yn.src', {}); st[k] = on; LS.set('yn.src', st); }
+const srcStatus = {};
+const FS_STEPS = [1, 1.15, 1.3, 1.5, 0.9];
+
+const state = { tab: 'news', newsSrc: 'all', newsSec: 'home', feedShown: 40, mediaSec: 'shmisen', data: {}, loading: false, reader: null };
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} }
+};
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function fmtTime(t) {
+  if (!t) return '';
+  const m = String(t).match(/^(\d{1,2}):(\d{2})(?::\d{2})?\s*(am|pm)?$/i);
+  if (!m) return t;
+  let h = +m[1]; const ap = (m[3] || '').toLowerCase();
+  if (ap === 'pm' && h < 12) h += 12; if (ap === 'am' && h === 12) h = 0;
+  return h + ':' + m[2];
+}
+function when(it) {
+  if (it.noTime) return 'היינטיגע אויסגאבע';
+  if (it.ts) { const d = new Date(it.ts), now = new Date(); const t = d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0');
+    const days = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / 86400000);
+    const rel = days === 0 ? 'היינט' : days === 1 ? 'נעכטן' : (d.getMonth() + 1) + '/' + d.getDate();
+    return (it.date && it.src === 'y24' ? it.date + ' · ' : rel + ' · ') + t; }
+  return [it.date, fmtTime(it.time)].filter(Boolean).join(' · ');
+}
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 2200); }
+function bg(url) { return url ? `style="background-image:url('${esc(url)}')"` : ''; }
+const itemsIndex = new Map();
+function reg(it) { itemsIndex.set(it.url, it); return esc(it.url); }
+
+async function api(path) {
+  const r = await fetch(path, { cache: 'no-store' });
+  const j = await r.json().catch(() => ({ ok: false }));
+  if (!j.ok) throw new Error(j.error || 'error');
+  return j;
+}
+
+/* ---------- saved ---------- */
+function saved() { return LS.get('yn.saved', []); }
+function isSaved(url) { return saved().some(x => x.url === url); }
+function toggleSave(it) {
+  let s = saved();
+  if (s.some(x => x.url === it.url)) { s = s.filter(x => x.url !== it.url); toast('אראפגענומען פון געהאלטענע'); }
+  else { s.unshift({ ...it, savedAt: Date.now() }); toast('געהאלטן 🔖'); }
+  LS.set('yn.saved', s.slice(0, 300));
+  return s.some(x => x.url === it.url);
+}
+
+/* ---------- rendering pieces ---------- */
+function isAV(it) { return it.audio || it.video || it.yt; }
+function badge(it) { const s = SRC[it.src || 'y24']; return s ? `<span class="badge" style="background:${s.color}">${esc(s.short)}</span>` : ''; }
+function alsoTxt(it) { return it.also && it.also.length ? `<span class="also">+ ${esc(it.also.map(x => (SRC[x.src] || {}).short || x.srcName).join(', '))}</span>` : ''; }
+function playIcon(it) { return it.video || it.yt || it.tgvid ? '▶' : '🎧'; }
+function heroHTML(it) {
+  const img = it.image;
+  return `<article class="hero ${img ? '' : 'noimg'}" data-open="${reg(it)}">
+    ${img ? `<div class="img" ${bg(img)}></div>` : ''}
+    <div class="ov">${it.src ? badge(it) + ' ' : ''}<span class="tag">${esc(it.sectionName || 'נייעס')}</span>
+    <h2>${esc(it.title)}</h2>${it.summary ? `<p>${esc(it.summary)}</p>` : ''}
+    <div class="meta">${it.src ? badge(it) : ''}${esc(when(it))}${alsoTxt(it)}</div></div></article>`;
+}
+function bigHTML(it) {
+  return `<article class="big" data-open="${reg(it)}">
+    ${it.image ? `<div class="img" ${bg(it.image)}>${isAV(it) || it.tgvid ? `<span class="playb">${playIcon(it)}</span>` : ''}${it.duration ? `<span class="dur">${esc(it.duration)}</span>` : ''}</div>` : ''}
+    <div class="bd"><span class="tag">${esc(it.sectionName || '')}</span><h4>${esc(it.title)}</h4>
+    ${it.summary ? `<p>${esc(it.summary)}</p>` : ''}<div class="meta">${it.src ? badge(it) : ''}${esc(when(it))}${alsoTxt(it)}</div></div></article>`;
+}
+function cardHTML(it, opts = {}) {
+  const audioBtn = it.audio && !it.video ? `<button class="aplay ${player.cur === it.audio && !player.el.paused ? 'on' : ''}" data-play="${reg(it)}" aria-label="שפיל">${player.cur === it.audio && !player.el.paused ? '❚❚' : '▶'}</button>` : '';
+  const thumb = it.image && !audioBtn ? `<div class="th" ${bg(it.image)}>${it.video || it.yt || it.tgvid ? '<span class="playb">▶</span>' : ''}</div>` : '';
+  const meta = [when(it), it.duration ? '⏱ ' + it.duration : ''].filter(Boolean).join(' · ');
+  return `<article class="card" data-open="${reg(it)}">${thumb}${audioBtn}<div class="tx">
+    <h4>${esc(it.title)}</h4>${it.summary && !opts.noSum ? `<p>${esc(it.summary)}</p>` : ''}<div class="meta">${opts.badge ? badge(it) : ''}${esc(meta)}${alsoTxt(it)}</div></div></article>`;
+}
+function vcardHTML(it) {
+  return `<article class="vcard" data-open="${reg(it)}"><div class="img" ${bg(it.image)}><span class="playb">${playIcon(it)}</span>${it.duration ? `<span class="dur">${esc(it.duration)}</span>` : ''}</div>
+    <div class="bd"><h4>${esc(it.title)}</h4><div class="meta">${esc(when(it))}</div></div></article>`;
+}
+function blitzHTML(items, withSrc) {
+  return `<div class="blitz">${items.map(it => `<div class="row" data-open="${reg(it)}"><div class="t">${esc(it.ts ? new Date(it.ts).getHours() + ':' + String(new Date(it.ts).getMinutes()).padStart(2, '0') : fmtTime(it.time))}</div><div class="h">${withSrc ? badge(it) : ''}${esc(it.title)}</div></div>`).join('')}</div>`;
+}
+function skeleton() { return `<div class="sk" style="height:260px"></div>` + '<div class="sk" style="height:104px"></div>'.repeat(5); }
+function errorHTML() { return `<div class="err">📡 די נייעס האבן זיך נישט געלאדנט.<br>קוק אויב דו ביסט אויפן אינטערנעט.<br><button data-retry>פרובירן נאכאמאל</button></div>`; }
+function stamp(at) {
+  if (!at) return '';
+  const d = new Date(at); return `<div class="stamp">דערהיינטיקט ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')} · ציט אראפ צו דערפרישן</div>`;
+}
+
+/* ---------- views ---------- */
+function setChips(list, active, list2, active2) {
+  const c2 = $('#chips2');
+  chipsEl.hidden = !list; c2.hidden = !list2;
+  if (list) { chipsEl.innerHTML = list; const on = chipsEl.querySelector('.on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' }); }
+  if (list2) { c2.innerHTML = list2.map(([k, n]) => `<button class="chip sm ${k === active2 ? 'on' : ''}" data-chip="${k}">${esc(n)}</button>`).join(''); const on = c2.querySelector('.on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest' }); }
+}
+function chipsHTML(list, active) { return list.map(([k, n]) => `<button class="chip ${k === active ? 'on' : ''}" data-chip="${k}">${esc(n)}</button>`).join(''); }
+function srcChipsHTML() {
+  const on = srcOn();
+  let h = `<button class="chip ${state.newsSrc === 'all' ? 'on' : ''}" data-src="all">אלע</button>`;
+  for (const s of SOURCES) {
+    const enabled = on.includes(s.key); const st = srcStatus[s.key];
+    const bad = st && !st.ok;
+    h += `<button class="chip src ${state.newsSrc === s.key ? 'on' : ''} ${enabled ? '' : 'off'}" data-src="${s.key}" style="--c:${s.color}">${enabled ? '' : '<span class="plus">+</span>'}${esc(s.short)}${bad ? '<small>⚠ לאדט נישט יעצט</small>' : ''}</button>`;
+  }
+  return h;
+}
+
+function renderHome(d) {
+  const sec = k => (d.sections.find(s => s.key === k) || { items: [] }).items;
+  const bul = sec('news/57'), blitz = sec('news/311'), alg = sec('news/59'), vid = sec('video'), shm = sec('shmisen'), tor = sec('torah'), mus = sec('music');
+  const heroIt = bul.find(x => x.image) || bul[0];
+  let h = '';
+  if (heroIt) h += heroHTML(heroIt);
+  const restBul = bul.filter(x => x !== heroIt);
+  if (blitz.length) h += secHead('news/311', '⚡ בליצן') + blitzHTML(blitz.slice(0, 6));
+  if (restBul.length) h += secHead('news/57', 'לעצטע נייעס') + restBul.slice(0, 6).map(it => cardHTML(it)).join('');
+  if (alg.length) h += secHead('news/59', 'סך הכל פון די נייעס') + bigHTML(alg[0]) + alg.slice(1, 3).map(it => cardHTML(it)).join('');
+  if (vid.length) h += secHead('video', '🎬 ווידעא', 'media') + `<div class="hscroll">${vid.slice(0, 10).map(vcardHTML).join('')}</div>`;
+  if (shm.length) h += secHead('shmisen', '🎙️ שמועסן', 'media') + shm.slice(0, 5).map(it => cardHTML(it)).join('');
+  if (tor.length) h += secHead('torah', '📖 תורה', 'media') + `<div class="hscroll">${tor.slice(0, 10).map(vcardHTML).join('')}</div>`;
+  if (mus.length) h += secHead('music', '🎵 נגינה', 'media') + mus.slice(0, 4).map(it => cardHTML(it, { noSum: true })).join('');
+  h += stamp(d.fetchedAt);
+  return h || `<div class="empty">קיין נייעס נישט געפונען.</div>`;
+}
+function renderFeed(d, src) {
+  const items = (d.items || []).filter(it => src !== 'all' || srcOn().includes(it.src));
+  (d.sources || []).forEach(s => { srcStatus[s.key] = s; });
+  const badSrc = (d.sources || []).filter(s => !s.ok).map(s => (SRC[s.key] || {}).short || s.name);
+  let h = badSrc.length ? `<div class="warn">⚠ ${esc(badSrc.join(', '))} — לאדט נישט יעצט, די אנדערע יא.</div>` : '';
+  if (!items.length) return h + `<div class="empty">דערווייל קיין נייעס דא.</div>`;
+  if (src !== 'all') h += `<h2 class="pg">${badge({ src })} ${esc(SRC[src].name)}</h2>`;
+  const ticker = items.filter(x => x.kind === 'ticker');
+  let arts = items.filter(x => x.kind !== 'ticker');
+  if (!arts.length) { arts = ticker; }
+  const hero = arts.find(x => x.image) || null;
+  if (hero) h += heroHTML(hero);
+  if (ticker.length && arts !== ticker) h += `<div class="sec-h"><h3>⚡ בליצן און טיקער</h3></div>` + blitzHTML(ticker.slice(0, src === 'all' ? 12 : 40), src === 'all');
+  const rest = arts.filter(x => x !== hero);
+  const shown = rest.slice(0, state.feedShown);
+  if (rest.length) h += `<div class="sec-h"><h3>${src === 'all' ? 'לעצטע נייעס פון אלע' : 'לעצטע נייעס'}</h3></div>`;
+  shown.forEach((it, i) => { h += (i % 7 === 6 && it.image) ? bigHTML(it) : cardHTML(it, { badge: true }); });
+  if (rest.length > shown.length) h += `<button class="more-btn" data-feedmore>ווייז מער ⌄</button>`;
+  h += stamp(d.fetchedAt);
+  return h;
+}
+function feedKey() { return state.newsSrc === 'all' ? 'feed:' + srcOn().join(',') : state.newsSrc === 'y24' ? state.newsSec : 'feed:' + state.newsSrc; }
+function secHead(key, title, tab = 'news') { return `<div class="sec-h"><h3>${esc(title)}</h3><button data-goto="${tab}:${key}">אלע ‹</button></div>`; }
+
+function renderSection(key, d) {
+  const items = d.items || [];
+  if (!items.length) return `<div class="empty">דערווייל קיין זאכן אין דעם טייל.</div>`;
+  let h = `<h2 class="pg">${esc(NAMES[key] || d.name || '')}</h2>`;
+  if (key === 'news/311') h += blitzHTML(items);
+  else if (key === 'video' || key === 'torah') h += items.map(bigHTML).join('');
+  else {
+    const first = items.find(x => x.image && !x.audio) || null;
+    if (first && /^news\/(57|59)$/.test(key)) h += bigHTML(first);
+    h += items.filter(x => x !== first).map(it => cardHTML(it)).join('');
+  }
+  if (PAGINATE(key)) h += `<button class="more-btn" data-more="${esc(key)}">ווייז מער ⌄</button>`;
+  h += stamp(d.fetchedAt);
+  return h;
+}
+
+function cacheKey(k) { return 'yn.c.' + k; }
+async function loadData(key, force) {
+  if (!force && state.data[key] && Date.now() - state.data[key]._t < 180000) return state.data[key];
+  const d = await api(key === 'home' ? '/api/home' : key.startsWith('feed:') ? '/api/feed?src=' + encodeURIComponent(key.slice(5)) : '/api/section?s=' + encodeURIComponent(key));
+  d._t = Date.now(); state.data[key] = d; LS.set(cacheKey(key), d);
+  return d;
+}
+
+let renderToken = 0;
+async function show(force) {
+  const tok = ++renderToken;
+  const tab = state.tab;
+  document.querySelectorAll('.bottom button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  if (tab === 'saved') { setChips(null); main.innerHTML = renderSaved(); return; }
+  if (tab === 'more') { setChips(null); main.innerHTML = renderMore(); return; }
+  const key = tab === 'news' ? feedKey() : state.mediaSec;
+  if (tab === 'news') setChips(srcChipsHTML(), null, state.newsSrc === 'y24' ? NEWS_CHIPS : null, state.newsSec);
+  else setChips(chipsHTML(MEDIA_CHIPS, key), null, null);
+  const cachedD = state.data[key] || LS.get(cacheKey(key), null);
+  const paint = d => { if (tok !== renderToken) return; main.innerHTML = key.startsWith('feed:') ? renderFeed(d, tab === 'media' ? 'all' : state.newsSrc) : key === 'home' ? renderHome(d) : renderSection(key, d); if (tab === 'news' && key.startsWith('feed:')) chipsEl.innerHTML = srcChipsHTML(); };
+  if (cachedD) paint(cachedD); else main.innerHTML = skeleton();
+  try { const d = await loadData(key, force); paint(d); setSub(); }
+  catch (e) { if (tok !== renderToken) return; if (!cachedD) main.innerHTML = errorHTML(); else toast('קען נישט דערפרישן יעצט'); }
+}
+function setSub() {
+  const any = state.data[feedKey()];
+  let date = '';
+  try { const its = any && (any.sections ? any.sections[0].items : any.items) || []; date = (its.find(x => x.src === 'y24' || (!x.src && x.date)) || {}).date || ''; } catch (_) {}
+  $('#subline').textContent = (date ? date.replace(/^\S+\s/, '') + ' · ' : '') + srcOn().length + ' מקורות';
+}
+
+function renderSaved() {
+  const s = saved();
+  let h = `<h2 class="pg">🔖 געהאלטענע ארטיקלען</h2>`;
+  if (!s.length) return h + `<div class="empty">נאך גארנישט געהאלטן.<br>דריק 🔖 ביי א ארטיקל צו היטן אים דא.</div>`;
+  return h + s.map(it => cardHTML(it)).join('');
+}
+function renderMore() {
+  const th = localStorage.getItem('yn.theme') || 'auto'; const fs = LS.get('yn.fsv', 1);
+  return `<h2 class="pg">⚙️ איינשטעלונגען</h2>
+  <div class="set">
+    <div class="row"><span>קאליר</span><div class="seg">${[['light', 'ליכטיג'], ['dark', 'טונקל'], ['auto', 'אויטאמאטיש']].map(([k, n]) => `<button data-theme-set="${k}" class="${th === k ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+    <div class="row"><span>גרייס פון שריפט</span><div class="seg">${[[0.9, 'קליין'], [1, 'נארמאל'], [1.3, 'גרויס'], [1.5, 'זייער גרויס']].map(([k, n]) => `<button data-fs-set="${k}" class="${fs == k ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+  </div>
+  <h2 class="pg" style="font-size:21px">📰 מקורות</h2>
+  <div class="set">
+    ${[['web', '🌐 וועבזייטלעך'], ['tg', '✈️ טעלעגראם קאנאלן'], ['yt', '📺 יוטוב ווידעאס און פאדקעסטס']].map(([g, gn]) => `<div class="grp">${gn}</div>` + SOURCES.filter(s => (s.yt ? 'yt' : s.tg ? 'tg' : 'web') === g).map(s => `<div class="row"><span>${badge({ src: s.key })} ${esc(s.name)}</span><button class="sw ${srcOn().includes(s.key) ? 'on' : ''}" data-srctoggle="${s.key}" aria-label="${esc(s.name)}"><i></i></button></div>`).join('')).join('')}
+  </div>
+  ${deferredInstall ? `<div class="set"><div class="row"><span>אינסטאלירן אויפן טעלעפאן</span><button class="chip on" data-install>אינסטאלירן</button></div></div>` : ''}
+  <div class="set"><div class="about">
+    <b>אידישע נייעס</b> קלייבט צוזאם די לעצטע אידישע נייעס פון ${SOURCES.length} מקורות אין איין ארט: וועבזייטלעך (Yiddish24, JDN, בחצרות הקודש, א בליק לייוו, דער איד), טעלעגראם קאנאלן (זעמל, בקיצור, בליץ, סאטמארע נייעס, בצל הקודש און נאך), און יוטוב ווידעאס און פאדקעסטס. ביי יעדן ארטיקל שטייט פון וועלכן מקור ער קומט, מיט א לינק צום ארגינעל.<br><br>
+    צו אינסטאלירן: עפן אין Chrome ← ⋮ ← "Install app".
+  </div></div>`;
+}
+
+/* ---------- reader ---------- */
+const reader = $('#reader'), art = $('#art');
+function openReader(it, push = true) {
+  state.reader = it;
+  reader.hidden = false; document.body.style.overflow = 'hidden';
+  if (push) history.pushState({ reader: it.url }, '', '?a=' + encodeURIComponent(it.url));
+  paintReader(it, true);
+  $('#rscroll').scrollTop = 0;
+  const canFetch = !it.full && /^https:\/\/((www\.)?yiddish24\.com|jdn\.news|(www\.)?bechatzros\.com)\//.test(it.url);
+  if (!canFetch) { paintReader(it, false); return; }
+  api('/api/item?u=' + encodeURIComponent(it.url)).then(d => {
+    if (state.reader !== it) return;
+    const full = { ...it, ...d.item, src: it.src || d.item.src, srcName: it.srcName || d.item.srcName, ts: it.ts || d.item.ts, kind: it.kind, also: it.also, sectionName: it.sectionName || d.item.sectionName, image: d.item.image || it.image, title: d.item.title || it.title, video: d.item.video || it.video, audio: d.item.audio || it.audio, duration: d.item.duration || it.duration, gallery: d.item.gallery || 0 };
+    if (!it.title || it.title === '…') full.title = d.item.title;
+    if ((it.paras || []).join('').length > (full.paras || []).join('').length) full.paras = it.paras;
+    state.reader = full; itemsIndex.set(full.url, full);
+    paintReader(full, false, d.related || []);
+  }).catch(() => { if (state.reader === it) paintReader(it, false, [], true); });
+}
+function paintReader(it, loading, related = [], failed) {
+  $('#rbarTitle').textContent = (SRC[it.src || 'y24'] || {}).name || 'אידישע נייעס';
+  $('#rSave').classList.toggle('on', isSaved(it.url));
+  const paras = it.paras && it.paras.length ? it.paras : [];
+  const av = it.yt
+    ? `<div class="ytbox"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(it.yt)}?playsinline=1&rel=0&modestbranding=1&hl=yi" title="${esc(it.title)}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`
+    : it.tgvid ? `<div class="abox"><a class="aplay" href="${esc(it.url)}" target="_blank" rel="noopener">▶</a><div class="lbl">📹 ווידעא — זע עס אויף טעלעגראם</div></div>`
+    : it.video
+    ? `<video controls playsinline preload="metadata" ${it.image ? `poster="${esc(it.image)}"` : ''} src="${esc(it.video)}"></video>`
+    : it.audio ? `<div class="abox"><button class="aplay ${player.cur === it.audio && !player.el.paused ? 'on' : ''}" data-play="${reg(it)}">${player.cur === it.audio && !player.el.paused ? '❚❚' : '▶'}</button><div><div class="lbl">הער צו</div><div class="meta">${esc(it.duration ? '⏱ ' + it.duration : '')}</div></div></div>`
+    : it.live ? `<div class="abox"><a class="aplay" href="${esc(it.live)}" target="_blank" rel="noopener">▶</a><div class="lbl">הער לעבעדיג אויף Yiddish24</div></div>` : '';
+  const pic = !it.video && !it.yt && it.image ? `<div class="pic"><img src="${esc(it.image)}" alt="" onerror="this.parentNode.remove()"></div>` : '';
+  art.innerHTML = `<span class="tag">${esc(it.sectionName || 'נייעס')}</span>
+    <h1>${esc(it.title)}</h1><div class="meta">${esc([when(it), it.duration ? '⏱ ' + it.duration : ''].filter(Boolean).join(' · '))}</div>
+    ${pic}${av}
+    <div class="body">${paras.map(p => `<p dir="rtl">${esc(p)}</p>`).join('')}${loading && !paras.length ? '<div class="sk" style="height:120px"></div>' : ''}${!loading && !paras.length ? `<p class="note">${it.gallery ? '📷 דאס איז א בילדער־גאלעריע (' + it.gallery + ' בילדער). עפן דעם ארגינעל אונטן צו זען אלע בילדער.' : (it.audio || it.video) ? '' : 'דער גאנצער טעקסט איז אויפן ארגינעל — דריק אונטן.'}</p>` : ''}</div>
+    <div class="srcbox" style="border-right-color:${(SRC[it.src || 'y24'] || SRC.y24).color}"><div class="s1">פֿון ${esc((SRC[it.src || 'y24'] || {}).name || it.srcName || 'Yiddish24')}</div>
+      <a href="${esc(it.url)}" target="_blank" rel="noopener">${/^https:\/\/t\.me\//.test(it.url) ? 'עפן אויף טעלעגראם ↗' : /youtube\.com/.test(it.url) ? 'עפן אויף YouTube ↗' : 'עפן דעם ארגינעל ↗'}</a>
+      ${it.also && it.also.length ? `<div class="meta" style="margin-top:8px">די זעלבע נייעס אויך ביי: ${it.also.map(x => `<a class="alsolink" href="${esc(x.url)}" target="_blank" rel="noopener">${esc((SRC[x.src] || {}).name || x.srcName)} ↗</a>`).join(' ')}</div>` : ''}</div>
+    <div class="acts"><a class="wa" href="${waLink(it)}" target="_blank" rel="noopener">שיק אין WhatsApp</a>
+      <button class="sv ${isSaved(it.url) ? 'on' : ''}" data-save>${isSaved(it.url) ? '🔖 געהאלטן' : '🔖 היטן'}</button></div>
+    ${related.length ? `<div class="rel"><h3>נאך פון דעם טייל</h3>${related.slice(0, 6).map(r => cardHTML(r)).join('')}</div>` : ''}`;
+}
+function waLink(it) { return 'https://wa.me/?text=' + encodeURIComponent(it.title + '\n\n' + it.url + '\n\n— פון ' + ((SRC[it.src || 'y24'] || {}).name || 'Yiddish24') + ', דורך אידישע נייעס'); }
+function closeReader(fromPop) {
+  if (reader.hidden) return;
+  reader.hidden = true; document.body.style.overflow = ''; state.reader = null;
+  art.querySelectorAll('video').forEach(v => v.pause()); art.querySelectorAll('iframe').forEach(f => f.remove());
+  if (!fromPop && history.state && history.state.reader) history.back();
+}
+window.addEventListener('popstate', () => {
+  const u = new URLSearchParams(location.search).get('a');
+  if (!u) closeReader(true);
+  else if (!state.reader || state.reader.url !== u) openReader(itemsIndex.get(u) || stub(u), false);
+});
+function stub(u) { return { url: u, title: '…', paras: [], sectionName: '' }; }
+
+/* ---------- audio ---------- */
+const player = { el: $('#player'), cur: '', item: null };
+function playItem(it) {
+  const el = player.el;
+  if (player.cur === it.audio) { el.paused ? el.play() : el.pause(); return; }
+  player.cur = it.audio; player.item = it; el.src = it.audio; el.play().catch(() => toast('קען נישט שפילן'));
+  $('#miniTitle').textContent = it.title; $('#mini').hidden = false;
+  if ('mediaSession' in navigator) { try { navigator.mediaSession.metadata = new MediaMetadata({ title: it.title, artist: 'Yiddish24', artwork: it.image ? [{ src: it.image, sizes: '512x512' }] : [] }); } catch (_) {} }
+}
+function syncPlayButtons() {
+  const playing = !player.el.paused;
+  $('#miniPlay').textContent = playing ? '❚❚' : '▶';
+  document.querySelectorAll('[data-play]').forEach(b => {
+    const it = itemsIndex.get(b.dataset.play); const on = it && it.audio === player.cur && playing;
+    b.classList.toggle('on', !!on); b.textContent = on ? '❚❚' : '▶';
+  });
+}
+['play', 'pause', 'ended'].forEach(e => player.el.addEventListener(e, syncPlayButtons));
+player.el.addEventListener('timeupdate', () => { const el = player.el; if (el.duration) $('#miniProg').style.width = (100 * el.currentTime / el.duration) + '%'; });
+$('#miniPlay').onclick = () => { player.el.paused ? player.el.play() : player.el.pause(); };
+$('#miniClose').onclick = () => { player.el.pause(); player.el.removeAttribute('src'); player.cur = ''; $('#mini').hidden = true; syncPlayButtons(); };
+$('#miniTitle').onclick = () => { if (player.item) openReader(player.item); };
+
+/* ---------- events ---------- */
+document.addEventListener('click', async e => {
+  const t = e.target.closest('[data-play],[data-open],[data-src],[data-feedmore],[data-srctoggle],[data-chip],[data-goto],[data-more],[data-retry],[data-save],[data-theme-set],[data-fs-set],[data-install]');
+  if (!t) return;
+  if (t.dataset.play) { e.stopPropagation(); const it = itemsIndex.get(t.dataset.play); if (it) playItem(it); return; }
+  if (t.dataset.open) { const it = itemsIndex.get(t.dataset.open); if (it) openReader(it); return; }
+  if (t.dataset.src) {
+    const k = t.dataset.src;
+    if (k !== 'all' && !srcOn().includes(k)) { setSrc(k, true); toast(SRC[k].name + ' — אנגעצונדן ✔'); }
+    state.newsSrc = k; state.feedShown = 40; scrollTo(0, 0); show(); return;
+  }
+  if (t.hasAttribute('data-feedmore')) { state.feedShown += 40; show(); return; }
+  if (t.dataset.srctoggle) { const k = t.dataset.srctoggle; setSrc(k, !srcOn().includes(k)); if (state.newsSrc === k && !srcOn().includes(k)) state.newsSrc = 'all'; show(); return; }
+  if (t.dataset.chip) { if (state.tab === 'news') state.newsSec = t.dataset.chip; else state.mediaSec = t.dataset.chip; scrollTo(0, 0); show(); return; }
+  if (t.dataset.goto) { const [tab, key] = t.dataset.goto.split(':'); state.tab = tab; if (tab === 'news') { state.newsSrc = 'y24'; state.newsSec = key; } else state.mediaSec = key; scrollTo(0, 0); show(); return; }
+  if (t.dataset.more !== undefined && t.dataset.more) return loadMore(t);
+  if (t.hasAttribute('data-retry')) return show(true);
+  if (t.hasAttribute('data-save')) { const on = toggleSave(state.reader); t.classList.toggle('on', on); t.textContent = on ? '🔖 געהאלטן' : '🔖 היטן'; $('#rSave').classList.toggle('on', on); return; }
+  if (t.dataset.themeSet) { setTheme(t.dataset.themeSet); show(); return; }
+  if (t.dataset.fsSet) { setFs(+t.dataset.fsSet); show(); return; }
+  if (t.hasAttribute('data-install')) return doInstall();
+});
+async function loadMore(btn) {
+  const key = btn.dataset.more; const d = state.data[key]; if (!d || !d.items.length) return;
+  btn.textContent = 'לאדט…'; btn.disabled = true;
+  try {
+    const last = d.items[d.items.length - 1];
+    const r = await api(`/api/more?s=${encodeURIComponent(key)}&last=${encodeURIComponent(last.id)}&offset=${d.items.length}`);
+    const have = new Set(d.items.map(x => x.id));
+    const add = r.items.filter(x => !have.has(x.id));
+    if (!add.length) { btn.textContent = 'דאס איז אלעס'; return; }
+    d.items = d.items.concat(add);
+    const html = key === 'news/311' ? blitzHTML(add) : add.map(it => cardHTML(it)).join('');
+    btn.insertAdjacentHTML('beforebegin', html);
+    btn.textContent = 'ווייז מער ⌄'; btn.disabled = false;
+  } catch (_) { btn.textContent = 'פרובירן נאכאמאל ⌄'; btn.disabled = false; }
+}
+// infinite scroll for paginated sections
+const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting && !en.target.disabled && /מער/.test(en.target.textContent)) loadMore(en.target); }), { rootMargin: '400px' });
+new MutationObserver(() => { const b = main.querySelector('[data-more]'); if (b && !b._obs) { b._obs = 1; io.observe(b); } }).observe(main, { childList: true });
+
+document.querySelectorAll('.bottom button').forEach(b => b.onclick = () => { if (state.tab === b.dataset.tab) { scrollTo({ top: 0, behavior: 'smooth' }); return; } state.tab = b.dataset.tab; scrollTo(0, 0); show(); });
+$('#rBack').onclick = () => closeReader();
+$('#rSave').onclick = () => { if (!state.reader) return; const on = toggleSave(state.reader); $('#rSave').classList.toggle('on', on); const sb = art.querySelector('[data-save]'); if (sb) { sb.classList.toggle('on', on); sb.textContent = on ? '🔖 געהאלטן' : '🔖 היטן'; } };
+$('#rShare').onclick = async () => {
+  const it = state.reader; if (!it) return;
+  if (navigator.share) { try { await navigator.share({ title: it.title, text: it.title, url: it.url }); return; } catch (_) { return; } }
+  location.href = waLink(it);
+};
+
+/* theme + font size */
+function setTheme(t) { try { localStorage.setItem('yn.theme', t); } catch (_) {} applyTheme(); }
+function applyTheme() {
+  const t = localStorage.getItem('yn.theme') || 'auto';
+  const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  $('#btnTheme').textContent = dark ? '☀' : '☾';
+  document.querySelector('meta[name=theme-color]').content = dark ? '#121113' : '#8E1B2B';
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+$('#btnTheme').onclick = () => { setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); if (state.tab === 'more') show(); };
+function setFs(v) { LS.set('yn.fsv', v); localStorage.setItem('yn.fs', String(v)); document.documentElement.style.setProperty('--fs', v); }
+function cycleFs() { const cur = LS.get('yn.fsv', 1); const i = FS_STEPS.indexOf(cur); const n = FS_STEPS[(i + 1) % FS_STEPS.length]; setFs(n); toast('שריפט: ' + Math.round(n * 100) + '%'); }
+$('#btnSize').onclick = cycleFs; $('#rSize').onclick = cycleFs;
+applyTheme();
+
+/* pull to refresh */
+(function () {
+  const ptr = $('#ptr'); let y0 = null, dy = 0, busy = false;
+  window.addEventListener('touchstart', e => { if (!reader.hidden || busy) return; if (window.scrollY <= 0) { y0 = e.touches[0].clientY; dy = 0; } else y0 = null; }, { passive: true });
+  window.addEventListener('touchmove', e => {
+    if (y0 == null) return; dy = e.touches[0].clientY - y0;
+    if (dy > 0 && window.scrollY <= 0) { ptr.style.transition = 'none'; ptr.style.height = Math.min(70, dy * 0.45) + 'px'; $('#ptrText').textContent = dy > 140 ? 'לאז אפ צו דערפרישן' : 'ציט אראפ צו דערפרישן'; }
+  }, { passive: true });
+  window.addEventListener('touchend', async () => {
+    if (y0 == null) return; y0 = null; ptr.style.transition = '';
+    if (dy > 140) { await refresh(); } else ptr.style.height = '0';
+  });
+  async function refresh() {
+    busy = true; ptr.style.height = '54px'; ptr.classList.add('spin'); $('#ptrText').textContent = 'דערפרישט…';
+    try { await show(true); } finally { ptr.classList.remove('spin'); ptr.style.height = '0'; busy = false; }
+  }
+  window.__refresh = refresh;
+})();
+
+/* install */
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; $('#btnInstall').hidden = false; });
+async function doInstall() { if (!deferredInstall) return; deferredInstall.prompt(); try { await deferredInstall.userChoice; } catch (_) {} deferredInstall = null; $('#btnInstall').hidden = true; }
+$('#btnInstall').onclick = doInstall;
+window.addEventListener('appinstalled', () => { $('#btnInstall').hidden = true; toast('אינסטאלירט ✔'); });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+
+/* auto refresh when coming back */
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && Date.now() - hiddenAt > 240000 && reader.hidden && (state.tab === 'news' || state.tab === 'media')) show(true); });
+
+/* start */
+const qs = new URLSearchParams(location.search);
+if (qs.get('tab') && ['news', 'media', 'saved', 'more'].includes(qs.get('tab'))) state.tab = qs.get('tab');
+show();
+const deep = qs.get('a');
+if (deep && /^https:\/\/((www\.)?yiddish24\.com|jdn\.news|(www\.)?bechatzros\.com)\//.test(deep)) { history.replaceState({}, '', '/'); openReader(stub(deep)); }
+window.__yn = { state, openReader, closeReader };
+})();

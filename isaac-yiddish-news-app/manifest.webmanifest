@@ -1,0 +1,61 @@
+{
+ "name": "אידישע נייעס",
+ "short_name": "אידישע נייעס",
+ "description": "לעבעדיגע אידישע נייעס, שמועסן, ווידעא, תורה און נגינה פון Yiddish24.",
+ "id": "/",
+ "start_url": "/?source=pwa",
+ "scope": "/",
+ "display": "standalone",
+ "orientation": "portrait",
+ "dir": "rtl",
+ "lang": "yi",
+ "background_color": "#F5F1EA",
+ "theme_color": "#8E1B2B",
+ "categories": [
+  "news"
+ ],
+ "icons": [
+  {
+   "src": "/assets/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/assets/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/assets/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "בליצן נייעס",
+   "short_name": "בליצן",
+   "url": "/?tab=news",
+   "icons": [
+    {
+     "src": "/assets/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "געהאלטענע",
+   "short_name": "געהאלטן",
+   "url": "/?tab=saved",
+   "icons": [
+    {
+     "src": "/assets/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  }
+ ]
+}
