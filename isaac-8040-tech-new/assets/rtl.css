@@ -1,0 +1,46 @@
+/* RTL (Yiddish) overrides — loaded only on /yi/ pages */
+html[dir=rtl] body{font-family:Heebo,Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:18px;line-height:1.75}
+[dir=rtl] h1,[dir=rtl] h2,[dir=rtl] h3,[dir=rtl] h4,[dir=rtl] .strip b,[dir=rtl] .btn{font-family:Rubik,'Space Grotesk',Inter,sans-serif;letter-spacing:0}
+[dir=rtl] h1,[dir=rtl] h2{line-height:1.25}[dir=rtl] h3,[dir=rtl] h4{line-height:1.35}
+[dir=rtl] .eyebrow{font-family:Rubik,'JetBrains Mono',monospace;letter-spacing:.02em;text-transform:none;font-size:.88rem}
+[dir=rtl] .eyebrow::before{background:linear-gradient(270deg,var(--brand),var(--accent))}
+[dir=rtl] .brand{direction:ltr}
+[dir=rtl] .skip{left:auto;right:-999px}[dir=rtl] .skip:focus{right:12px}
+[dir=rtl] .dd-btn::after{margin-left:0;margin-right:8px}
+[dir=rtl] .badge{padding:7px 8px 7px 14px}
+[dir=rtl] .badge i{margin-left:0;margin-right:6px}
+[dir=rtl] .strip div{border-left:0;border-right:1px solid var(--line)}
+[dir=rtl] .strip div:first-child{border-right:0}
+[dir=rtl] .more::after{content:'←'}
+[dir=rtl] a.card:hover .more::after{transform:translateX(-4px)}
+[dir=rtl] .checks li{padding-left:0;padding-right:34px}
+[dir=rtl] .checks li::before{left:auto;right:0}
+[dir=rtl] .timeline .step{padding-left:24px;padding-right:92px}
+[dir=rtl] .timeline .step::before{left:auto;right:24px}
+[dir=rtl] .timeline::before{left:auto;right:43px}
+[dir=rtl] .note{border-left:0;border-right:4px solid var(--brand);border-radius:12px 0 0 12px}
+[dir=rtl] .faq summary{padding:18px 0 18px 34px}
+[dir=rtl] .faq summary::after{right:auto;left:0}
+[dir=rtl] .plan .pill{left:auto;right:24px}
+[dir=rtl] .cta::after{right:auto;left:-80px}
+[dir=rtl] .hours td:last-child{text-align:left}
+[dir=rtl] .hero::before{mask-image:radial-gradient(ellipse at 30% 30%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 30% 30%,#000 10%,transparent 70%)}
+[dir=rtl] input[type=email],[dir=rtl] input[type=tel]{direction:ltr;text-align:right}
+[dir=rtl] .ltr,[dir=rtl] a[href^="mailto:"],[dir=rtl] a[href^="tel:"]{unicode-bidi:isolate;direction:ltr}
+[dir=rtl] .hero-art text{font-family:Rubik,Heebo,sans-serif;letter-spacing:0}
+@media(max-width:1060px){[dir=rtl] .menu a,[dir=rtl] .menu .dd-btn{text-align:right}[dir=rtl] .dd{padding:0 8px 0 0}}
+@media(max-width:640px){[dir=rtl] .strip div:nth-child(3){border-right:0}[dir=rtl] .timeline .step{padding-right:24px}}
+
+[dir=rtl] .menu a,[dir=rtl] .menu .dd-btn{white-space:nowrap;padding:9px 11px}
+[dir=rtl] .nav-cta{white-space:nowrap}
+@media(min-width:1061px) and (max-width:1260px){[dir=rtl] .nav-cta{display:none}}
+@media(max-width:1060px){[dir=rtl] .menu a,[dir=rtl] .menu .dd-btn{white-space:normal;padding:13px 12px}}
+
+@media(max-width:640px){[dir=rtl] .strip b{font-size:1.2rem;white-space:nowrap}}
+
+[dir=rtl] .tag,[dir=rtl] .foot h4{font-family:Rubik,Heebo,Inter,sans-serif;letter-spacing:0;text-transform:none}
+[dir=rtl] .eyebrow{font-family:Rubik,Heebo,Inter,sans-serif}
+[dir=rtl] bdi.nw{white-space:nowrap}
+
+[dir=rtl] .card[style*="JetBrains"]{font-family:Heebo,Inter,sans-serif!important}
+[dir=rtl] .card[style*="JetBrains"] p:first-child{direction:ltr;text-align:right;font-family:'JetBrains Mono',monospace}
