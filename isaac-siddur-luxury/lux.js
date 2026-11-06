@@ -1,0 +1,2 @@
+(function(){var t='navy';try{t=localStorage.getItem('siddur.lux')||'navy';}catch(e){}if(!/^(navy|midnight|burgundy|ivory|auto)$/.test(t))t='navy';var d=document.documentElement;d.setAttribute('data-lux',t);
+var C={navy:'#0a1330',midnight:'#09090a',burgundy:'#25070f',ivory:'#f5eedd'};var c=t==='auto'?((window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?C.navy:C.ivory):C[t];var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',c);})();

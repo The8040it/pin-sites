@@ -1,0 +1,1 @@
+(function(){try{var s=JSON.parse(localStorage.getItem('siddur.v1')||'{}');var r=s.radios||{};for(var n in r){var e=document.getElementById(r[n]);if(e&&e.name===n)e.checked=true;}if(typeof s.headings==='boolean'){var h=document.getElementById('headings-on');if(h)h.checked=s.headings;}}catch(e){}})();
