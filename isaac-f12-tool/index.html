@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>F12 טול</title>
+<meta name="description" content="דעוועלאפער טולס (F12) אויף יעדן וועבזייטל אין כראם אויף אנדרויד">
+<meta name="theme-color" content="#0b0f14">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-180.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <img src="icons/icon-192.png" alt="" class="logo" width="64" height="64">
+  <div>
+    <h1>F12 טול</h1>
+    <p class="sub">זע די אינפארמאציע פון יעדן וועבזייטל, פונקט ווי F12 אויף א קאמפיוטער</p>
+  </div>
+</header>
+
+<main>
+<section class="card intro">
+  <p>אויף א קאמפיוטער דריקט מען <b class="k">F12</b> און מען זעט די „דעוועלאפער טולס": דעם HTML קאוד, ערראָרס, וואס דער זייטל לאדט, קוקיס און נאך.</p>
+  <p>כראם אויף אנדרויד האט נישט קיין F12. דערפאר מאכט מען איינמאל א בוקמארק מיטן נאמען <b class="k">F12</b>, און פון דאן און ווייטער עפנט עס א פולע דעוועלאפער פענעל אויף יעדן זייטל.</p>
+</section>
+
+<button id="copyBtn" class="big" type="button">📋 קאפיר דעם F12 קאוד</button>
+<p id="copyMsg" class="copymsg" role="status" aria-live="polite"></p>
+<details class="codebox">
+  <summary>ווייז דעם קאוד</summary>
+  <textarea id="code" dir="ltr" readonly rows="6" spellcheck="false"></textarea>
+  <p class="small">אויב דער קנעפל קאפירט נישט: האלט דעם פינגער אויפן קאוד, „Select all", דערנאך „Copy".</p>
+</details>
+
+<button id="tryBtn" class="try" type="button">🧪 פרובירט עס דא אויף דעם זייטל</button>
+<p class="litelink"><a href="index.html#lite">גוגל זייטל? ווייזט „blocks the full tools"? ⬇️ ניץ <b>⚡ F12 Lite</b></a></p>
+
+<h2>אזוי שטעלט מען עס איין <span class="small">(איינמאל)</span></h2>
+
+<ol class="steps">
+<li>
+  <h3><span class="n">1</span> קאפיר דעם קאוד</h3>
+  <p>דריק אויפן גרינעם קנעפל אויבן: <b>📋 קאפיר דעם F12 קאוד</b>.</p>
+</li>
+
+<li>
+  <h3><span class="n">2</span> מאך א בוקמארק</h3>
+  <p>אויף יעדן זייטל (אפילו אויף דעם) דריק <b class="k">⋮</b> (די דריי פינטעלעך אויבן אין עק), און דערנאך דעם שטערן <b class="k">☆</b>.</p>
+  <div class="phone" dir="ltr" aria-hidden="true">
+    <div class="bar"><span class="addr">isaac-f12-tool.sites.tab.bot</span><span class="dots hl">⋮</span></div>
+    <div class="menu"><span>→</span><span class="hl">☆</span><span>⤓</span><span>ⓘ</span><span>↻</span></div>
+    <div class="menu-items"><div>New tab</div><div>History</div><div>Bookmarks</div></div>
+  </div>
+</li>
+
+<li>
+  <h3><span class="n">3</span> דריק <span dir="ltr">Edit</span></h3>
+  <p>אונטן ווייזט זיך <b dir="ltr">Bookmarked</b> מיט א קנעפל <b dir="ltr">Edit</b>. דריק <b dir="ltr">Edit</b>.</p>
+  <p class="small">שוין אוועק? דריק נאכאמאל ⋮ און דעם בלויען שטערן ★, עס עפנט זיך דאס זעלבע.</p>
+  <div class="phone" dir="ltr" aria-hidden="true">
+    <div class="bar"><span class="addr">isaac-f12-tool.sites.tab.bot</span><span class="dots">⋮</span></div>
+    <div class="page"></div>
+    <div class="snack"><span>Bookmarked</span><span class="hl edit">Edit</span></div>
+  </div>
+</li>
+
+<li>
+  <h3><span class="n">4</span> נאמען F12, און אריינלייגן דעם קאוד</h3>
+  <p>ביי <b dir="ltr">Name</b>: מעק אויס וואס שטייט און שרייב <b class="k">F12</b>.</p>
+  <p>ביי <b dir="ltr">URL</b>: מעק אויס אלעס, האלט דעם פינגער לאנג אויפן פעלד און דריק <b dir="ltr">Paste</b>.</p>
+  <p>דערנאך דריק דעם פייל <b class="k">←</b> אויבן. דער בוקמארק ווערט געהאלטן.</p>
+  <div class="phone" dir="ltr" aria-hidden="true">
+    <div class="edhead"><span class="hl">←</span> Edit bookmark</div>
+    <div class="field"><label>Name</label><div class="val hlbox">F12</div></div>
+    <div class="field"><label>URL</label><div class="val hlbox mono">javascript:(function(){var u='https://isaac-f12-tool…</div></div>
+    <div class="field"><label>Folder</label><div class="val">Mobile bookmarks</div></div>
+  </div>
+</li>
+
+<li>
+  <h3><span class="n">5</span> ניץ עס אויף יעדן זייטל</h3>
+  <p>עפן א וועבזייטל. דריק אויפן אדרעס-באר אויבן, שרייב <b class="k">F12</b>, און דריק אויפן <b>F12 בוקמארק</b> וואס ווייזט זיך אין די ליסטע (מיט א ★ שטערן).</p>
+  <p class="warn">⚠️ דריק נישט Enter, ווייל דאן זוכט עס F12 אין גוגל.</p>
+  <div class="phone" dir="ltr" aria-hidden="true">
+    <div class="bar typing"><span class="addr">F12<i class="caret"></i></span><span class="x">✕</span></div>
+    <div class="sugg hlrow"><span class="star">★</span><div><b>F12</b><small>javascript:(function(){var u=…</small></div></div>
+    <div class="sugg"><span class="star g">🔍</span><div>f12<small>Google Search</small></div></div>
+    <div class="sugg"><span class="star g">🔍</span><div>f12 key<small>Google Search</small></div></div>
+  </div>
+</li>
+
+<li>
+  <h3><span class="n">6</span> עס עפנט זיך</h3>
+  <p>אונטן קומט ארויף א טונקעלע פענעל. צו ערשט ווייזט זיך <b>ℹ️ אינפא</b>: אלע אינפארמאציע פונעם זייטל, קלאר און אויסגעשריבן, נישט קיין רוי HTML.</p>
+  <p>א קליינער <b class="k">⚙</b> קנעפל בלייבט אין זייט פונעם זייטל: דריק עס צו עפענען אדער צומאכן.</p>
+  <div class="phone" dir="ltr" aria-hidden="true">
+    <div class="bar"><span class="addr">example.com</span><span class="dots">⋮</span></div>
+    <div class="page short"><b>Example Domain</b></div>
+    <div class="eru">
+      <div class="etabs"><span class="on">ℹ️ אינפא</span><span>Console</span><span>Elements</span><span>Network</span></div>
+      <div class="einfo" dir="rtl">
+        <div class="eh">📄 בלאט</div>
+        <div class="ek">טיטל</div><div class="ev" dir="ltr">Example Domain</div>
+        <div class="ek">דאמעין</div><div class="ev" dir="ltr">example.com</div>
+        <div class="eh">🔒 זיכערהייט</div>
+        <div class="ek">HTTPS</div><div class="ev" dir="ltr">✅ yes</div>
+      </div>
+    </div>
+  </div>
+</li>
+</ol>
+
+<section class="card note">
+  <p><b>פארוואס דורך דעם אדרעס-באר?</b> כראם אויף אנדרויד לאזט לויפן אזא בוקמארק נאר ווען מען וויילט עס אויס פון די ליסטע אונטערן אדרעס-באר. פון דעם בוקמארקס-בלאט ארבעט עס נישט.</p>
+</section>
+
+
+<h2 id="lite">⚡ F12 Lite – פאר גוגל און שטרענגע סייטס</h2>
+<section class="card lite">
+  <p>גוגל זייטלעך (למשל NotebookLM, Gmail, Google Docs) און עטליכע אנדערע זייטלעך לאזן נישט אריינלאדן קיין פרעמדע טולס. דארט ווייזט דער פולער F12 די מעלדונג <span dir="ltr">„This site blocks the full tools — use F12 Lite (type F12M)"</span>.</p>
+  <p>דאן ניץ <b>F12 Lite</b>. דער גאנצער קאוד איז אינעווייניג אינעם בוקמארק אליין. ער לאדט גארנישט פון דרויסן, דערפאר ארבעט ער אויך אויף גוגל.</p>
+  <p>ער ווייזט די זעלבע <b>ℹ️ אינפא</b>: בלאט, זיכערהייט, גיכקייט, אינהאלט, לינקס, סקריפטן און סערוויסעס, סאשעל און סטארעדזש. מיט <b>📋</b> קאפירט מען אלעס, מיט <b class="k">✕</b> מאכט מען עס צו. (קיין Console, HTML אדער Network האט ער נישט.)</p>
+  <button id="liteBtn" class="big lite" type="button">📋 קאפיר דעם F12 Lite קאוד</button>
+  <p id="liteMsg" class="copymsg" role="status" aria-live="polite"></p>
+  <details class="codebox">
+    <summary>ווייז דעם F12 Lite קאוד</summary>
+    <textarea id="liteCode" dir="ltr" readonly rows="6" spellcheck="false"></textarea>
+    <p class="small">אויב דער קנעפל קאפירט נישט: האלט דעם פינגער אויפן קאוד, „Select all", דערנאך „Copy".</p>
+  </details>
+  <button id="tryLite" class="try lite" type="button">🧪 פרובירט F12 Lite דא</button>
+  <h3>אזוי שטעלט מען עס איין <span class="small">(איינמאל, פונקט ווי אויבן)</span></h3>
+  <ol class="mini">
+    <li>דריק <b>📋 קאפיר דעם F12 Lite קאוד</b>.</li>
+    <li>דריק <b class="k">⋮</b> און דעם שטערן <b class="k">☆</b>, דערנאך <b dir="ltr">Edit</b> (שריט 2 און 3 אויבן).</li>
+    <li>ביי <b dir="ltr">Name</b> שרייב <b class="k">F12M</b>. ביי <b dir="ltr">URL</b> מעק אויס אלעס און דריק <b dir="ltr">Paste</b>. דערנאך דריק <b class="k">←</b>.</li>
+    <li>אויף א גוגל זייטל: דריק אויפן אדרעס-באר, שרייב <b class="k">F12M</b>, און דריק אויפן <b>★ F12M</b> בוקמארק אין די ליסטע. נישט Enter.</li>
+  </ol>
+  <p class="small">נאכאמאל F12M, אדער ✕, מאכט עס צו. עס איז נאר צו לייענען: עס ענדערט גארנישט אויפן זייטל און שיקט גארנישט אוועק.</p>
+</section>
+
+<h2>וואס יעדער טאב ווייזט</h2>
+<div class="tabs">
+  <div class="t first"><div class="tn">ℹ️ אינפא</div><p><b>אלע אינפארמאציע, קלאר.</b> עפנט זיך צו ערשט. אלעס אין אפטיילונגען, מען קען יעדע עפענען און צומאכן:</p>
+    <ul class="mini">
+      <li><b>📄 בלאט:</b> טיטל, אדרעס, דאמעין, שפראך, באשרייבונג, שליסל-ווערטער, אייקאן.</li>
+      <li><b>🔒 זיכערהייט:</b> צי עס איז HTTPS, און וויפיל קוקיס.</li>
+      <li><b>⚡ גיכקייט:</b> לאד-צייט, גרייס פונעם זייטל, וויפיל בקשות.</li>
+      <li><b>📝 אינהאלט:</b> די כעפלעך (H1–H3), וויפיל ווערטער, לינקס, בילדער, ווידעאס און פארמען.</li>
+      <li><b>🔗 לינקס:</b> אינערליכע און דרויסנדיגע, מיט א ליסטע פון די דרויסנדיגע זייטלעך.</li>
+      <li><b>🧩 סקריפטן און סערוויסעס:</b> וועלכע באקאנטע סערוויסעס דער זייטל ניצט (Google Analytics, Facebook Pixel, Cloudflare, jQuery, React, WordPress און נאך), און פון וועלכע דאמעינס עס לאדט.</li>
+      <li><b>📣 סאשעל (OG):</b> דער טיטל, בילד און באשרייבונג וואס ווייזן זיך ווען מען שיקט דעם לינק.</li>
+      <li><b>💾 סטארעדזש:</b> וויפיל זאכן עס האלט אין localStorage און sessionStorage.</li>
+    </ul>
+    <p>דער <b>📋 קאפיר אלע אינפא</b> קנעפל קאפירט אלעס ווי טעקסט, צו שיקן אין וואטסעפ.</p></div>
+  <div class="t"><div class="tn" dir="ltr">Console</div><p><b>קאנסאל.</b> די ערראָרס און מעלדונגען פונעם זייטל: רויט איז אן ערראָר, געל א ווארענונג. אונטן קען מען שרייבן א JavaScript קאמאנדע, און זי לויפט אויפן זייטל.</p></div>
+  <div class="t"><div class="tn" dir="ltr">Elements</div><p><b>עלעמענטן (HTML).</b> דער גאנצער HTML בוים פונעם זייטל. דריק אויף א טייל צו זען זיין CSS סטייל, גרייס און אטריבוטן. מיטן 🎯 קנעפל טאפט מען א זאך אויפן זייטל און מען זעט איר קאוד.</p></div>
+  <div class="t"><div class="tn" dir="ltr">Network</div><p><b>נעטווערק.</b> יעדע בקשה וואס דער זייטל שיקט: דער אדרעס, דער סטאטוס (200, 404…), די גרייס, די צייט און די headers. עס ווייזט וואס פאסירט נאכדעם וואס F12 איז אפן.</p></div>
+  <div class="t"><div class="tn" dir="ltr">Resources</div><p><b>רעסורסן.</b> קוקיס, localStorage און sessionStorage, און די ליסטע פון די סקריפטן, CSS און בילדער וואס דער זייטל ניצט.</p></div>
+  <div class="t"><div class="tn" dir="ltr">Sources</div><p><b>קוועלן.</b> דער מקור-קאוד פונעם זייטל און פון זיינע סקריפטן, צו לייענען.</p></div>
+  <div class="t"><div class="tn" dir="ltr">Info</div><p><b>אינפא.</b> דער אדרעס פונעם זייטל, דער User Agent, און אינפארמאציע וועגן דיין טעלעפאן און בראוזער.</p></div>
+  <div class="t"><div class="tn" dir="ltr">Settings</div><p><b>איינשטעלונגען.</b> טונקל אדער ליכטיג, די גרייס פון דער פענעל, און וועלכע טאבן זאלן זיך ווייזן.</p></div>
+</div>
+
+<h2>גוט צו וויסן</h2>
+<section class="card">
+  <ul class="facts">
+    <li>עס ארבעט נאר אויף זייטלעך וואס עפענען זיך שוין ביי דיר. עס עפנט נישט קיין פארשפארטע זייטלעך, און עס ענדערט גארנישט אין דיין פילטער.</li>
+    <li>עטליכע זייטלעך (למשל באנקן, וויקיפעדיע, GitHub) לאזן נישט אריינלאדן קיין פרעמדע טולס צוליב זיכערהייט. דאן ווייזט זיך די מעלדונג <span dir="ltr">„This site blocks the full tools — use F12 Lite (type F12M)"</span>. דארט ניץ <a href="index.html#lite">⚡ F12 Lite</a> (שרייב F12M).</li>
+    <li>נאך א ריפרעש פונעם זייטל גייט F12 צו. קלאפ עס נאכאמאל אן פונעם אדרעס-באר.</li>
+    <li>אלעס ווערט געלייענט פונעם זייטל אליין, אויף דיין טעלעפאן. דער טול שיקט נישט אוועק קיין אינפארמאציע, און ער לאדט גארנישט פון אנדערע זייטלעך.</li>
+  </ul>
+</section>
+
+<footer class="foot" dir="ltr">Eruda <span id="ver">3.4.3</span> · open source (MIT) · <a href="eruda-LICENSE.txt">license</a></footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
