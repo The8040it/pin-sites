@@ -1,5 +1,5 @@
 /* Apps v9 — app shell: views, favorites (long-press), recent, search highlight, theme */
-if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js');
 (function(){
 var d=document,root=d.documentElement,body=d.body,$=function(s,c){return (c||d).querySelector(s)},$$=function(s,c){return [].slice.call((c||d).querySelectorAll(s))};
 var LS={get:function(k,f){try{var v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
