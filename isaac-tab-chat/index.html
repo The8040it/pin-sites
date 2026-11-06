@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tab</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0b2545"><link rel="icon" href="icon-192.png">
+<style>body{margin:0;font-family:system-ui,sans-serif;background:linear-gradient(#0b2545,#13315c);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
+img{width:110px;border-radius:28px;box-shadow:0 6px 24px #0008}h1{margin:16px 0 4px;font-size:32px}p{opacity:.8;margin:0 0 28px}
+a.b{display:flex;align-items:center;gap:14px;width:100%;max-width:380px;box-sizing:border-box;padding:18px 20px;margin:8px 0;border-radius:18px;text-decoration:none;color:#fff;font-size:20px;font-weight:600}
+.w{background:#25d366}.s{background:#1a73e8}.m{background:#d4a017;color:#0b2545!important}span.i{font-size:28px}
+#inst{display:none;margin-top:22px;background:none;border:2px solid #fff6;color:#fff;padding:12px 20px;border-radius:14px;font-size:16px}</style></head><body>
+<img src="icon-512.png" alt=""><h1>Tab</h1><p>Chat with me in one tap</p>
+<a class="b w" href="https://wa.me/12512765320"><span class="i">💬</span>WhatsApp</a>
+<a class="b s" href="sms:+16504442574"><span class="i">📱</span>Text message</a>
+<a class="b m" href="mailto:isaac.assistant@mail.tab.bot"><span class="i">📧</span>Email</a>
+<button id="inst">⬇️ Install app</button>
+<script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');let d;addEventListener('beforeinstallprompt',e=>{e.preventDefault();d=e;inst.style.display='block'});inst.onclick=()=>{d&&d.prompt()}</script></body></html>
