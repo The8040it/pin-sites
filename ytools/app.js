@@ -276,5 +276,5 @@ chips();renderHome();route();
 $('#tg').onclick=function(){var d=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=d;try{localStorage.setItem('ytheme',d);}catch(e){}};
 var dp;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('#ib').hidden=false;});
 $('#ib').onclick=function(){if(dp){dp.prompt();dp=null;$('#ib').hidden=true;}};
-if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){});});
+if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){});});
 })();
