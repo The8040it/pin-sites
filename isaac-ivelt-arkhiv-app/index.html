@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="yi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>אייוועלט ארכיוו</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#101828">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="אייוועלט">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#101828;overflow:hidden}
+body{display:flex;flex-direction:column;height:100vh;height:100dvh;font-family:system-ui,"Noto Sans Hebrew",Arial,sans-serif}
+#bar{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:3px 8px;padding-top:calc(3px + env(safe-area-inset-top));background:#101828;color:#d4af37}
+#bar .t{flex:1;font-weight:bold;font-size:15px}
+#bar button,#bar a{background:none;border:1px solid #3a4560;color:#d4af37;border-radius:7px;font-size:17px;line-height:1;padding:4px 9px;text-decoration:none;cursor:pointer}
+#inst{display:none;font-size:13px!important;font-weight:bold}
+iframe{flex:1 1 auto;width:100%;border:0;display:block;background:#fff}
+#off{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:18px;background:#101828;color:#d4af37;text-align:center;padding:24px;font-size:20px;line-height:1.6}
+#off button{font-size:18px;padding:8px 18px;border-radius:9px;border:1px solid #d4af37;background:none;color:#d4af37}
+body.offline #off{display:flex}
+</style></head><body>
+<div id="bar"><span class="t">אייוועלט ארכיוו</span>
+<button id="inst" title="אינסטאלירן">⬇ אינסטאלירן</button>
+<button id="home" title="צוריק צום הויפט בלאט">🏠</button>
+<a id="ext" href="https://ivelt-arkhiv-125dd3.sites.tab.bot/" target="_blank" rel="noopener" title="עפענען אין בראוזער">↗</a></div>
+<iframe id="f" src="https://ivelt-arkhiv-125dd3.sites.tab.bot/" title="אייוועלט ארכיוו" allow="fullscreen; clipboard-write" referrerpolicy="no-referrer"></iframe>
+<div id="off"><div>📶</div><div>מען דארף אינטערנעט צו עפענען דעם ארכיוו</div><button id="retry">🔄 פרובירן נאכאמאל</button></div>
+<script>
+const A="https://ivelt-arkhiv-125dd3.sites.tab.bot/",f=document.getElementById('f');
+document.getElementById('home').onclick=()=>{f.src=A+'?r='+Date.now();};
+function net(){document.body.classList.toggle('offline',!navigator.onLine);}
+addEventListener('online',()=>{net();f.src=A;});addEventListener('offline',net);net();
+document.getElementById('retry').onclick=()=>{if(navigator.onLine){net();f.src=A;}else location.reload();};
+let dp=null;const ib=document.getElementById('inst');
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;ib.style.display='inline-block';});
+ib.onclick=async()=>{if(!dp)return;dp.prompt();await dp.userChoice;dp=null;ib.style.display='none';};
+addEventListener('appinstalled',()=>{ib.style.display='none';});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js',{scope:'/'}).catch(e=>console.log('sw',e));}
+</script></body></html>
