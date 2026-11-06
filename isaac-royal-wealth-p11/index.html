@@ -1,0 +1,33 @@
+<!doctype html><html lang="yi" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>טייל 11 פון 12 — די רייכסטע קעניגלעכע פאמיליעס פון דער וועלט</title>
+<meta property="og:title" content="טייל 11 פון 12 — די רייכסטע קעניגלעכע פאמיליעס פון דער וועלט">
+<style>
+body{margin:0;background:#0d0d14;color:#f2efe6;font-family:"Noto Sans Hebrew","Arial Hebrew",Arial,sans-serif;line-height:1.5}
+header{padding:22px 16px 8px;text-align:center}h1{font-size:1.45em;margin:0 0 6px;color:#e2c15a}
+.sub{opacity:.8;font-size:.95em}.part{max-width:860px;margin:18px auto;padding:0 12px 18px;border-bottom:1px solid #2a2a38}
+h2{font-size:1.15em;margin:10px 0 4px;color:#e2c15a}.meta{font-size:.9em;opacity:.8;margin-bottom:8px}
+ul{margin:4px 0 10px;padding-inline-start:20px;font-size:.92em;opacity:.9}
+video{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px}
+button{margin-top:8px;background:#2b2b3d;color:#f2efe6;border:1px solid #555;border-radius:6px;padding:8px 14px;font-size:.95em}
+.soon{opacity:.55}
+</style></head><body><header><h1>די רייכסטע קעניגלעכע פאמיליעס פון דער וועלט</h1><div class="sub"><a style="color:#e2c15a" href="https://isaac-royal-wealth-yiddish.sites.tab.bot/">← אלע טיילן</a></div></header>
+<section class="part"><h2>טייל 11 פון 12</h2><div class="meta">לענג: 24:36</div><ul><li>מאראקאס מלך מוחמד דער זעקסטער קאנטראלירט די עקאנאמיע דורך אלמאדא, מיט פאלאצן און קארס אן נאפט.</li><li>טיילאנדס קעניג וואדזשיראלאנגקארן קאנטראלירט פערזענליך דעם קרוין-פארמעגן ביורא, פאלאצן, פליגערס, יאכטן און א ריזיגן דימענט.</li><li>אייראפעאישע מלכים: דענישע מלכה מארגרעטע די צווייטע און מאנאקאס פרינץ אלבערט, קלענערע אבער שטאביל פארמעגן.</li><li>דובאיס אל מאקטום פאמיליע: לופט-ליניעס, אימאביליע, לוקסוס-קארס, פערד-געיעג, און פאמיליע-סקאנדאלן.</li><li>ברוניי'ס סולטאן בולקיה האט ריזיגע קאר- און פליגער-זאמלונגען, פראכטפולן פאלאץ, און א פארשווענדעריש ברודער.</li><li>בריטישע ווינדזארס, אבו דאביס אל נהיאן, קאטארס אל ת'אני, און עמאנס אל סעיד דינאסטיעס ווערן פארגליכן.</li><li>סאודי אראביע'ס הויז פון סאוד איז דאס גרעסטע פארמעגן בכלל, מיט קעניג סלמאן און א ריזיגן שטאטלעכן פאנד.</li><li>היסטארישע רשימה פון די רייכסטע הערשער אלץ, פון קאטערינע די גרויסע ביז דשינגיס כאן אויפן ערשטן ארט.</li></ul>
+<video controls playsinline preload="none" poster="p/poster.jpg" data-src="p/index.m3u8"></video>
+<button onclick="dl(this,'p','Yiddish_Royal_Wealth_Video_Part_11_of_12.mp4')">⬇ אראפלאדן טייל 11</button></section>
+<script src="hls.min.js"></script><script>
+document.querySelectorAll('video[data-src]').forEach(function(v){
+  var src=v.getAttribute('data-src');
+  if(window.Hls&&Hls.isSupported()){var started=false;v.addEventListener('play',function(){if(started)return;started=true;var h=new Hls();h.loadSource(src);h.attachMedia(v);h.on(Hls.Events.MANIFEST_PARSED,function(){v.play();});});}
+  else if(v.canPlayType('application/vnd.apple.mpegurl')){v.src=src;}
+  else{v.src=src;}
+});
+async function dl(btn,dir,name){
+  btn.disabled=true;var lbl=btn.textContent;
+  try{var m=await (await fetch(dir+'/index.m3u8')).text();
+    var segs=m.split('\n').filter(function(l){return l&&l[0]!=='#';});
+    var parts=[await (await fetch(dir+'/init.mp4')).arrayBuffer()];
+    for(var i=0;i<segs.length;i++){btn.textContent='לאדנט… '+Math.round(100*i/segs.length)+'%';parts.push(await (await fetch(dir+'/'+segs[i])).arrayBuffer());}
+    var b=new Blob(parts,{type:'video/mp4'});var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();
+    btn.textContent='✓ '+lbl;}catch(e){btn.textContent='א פעלער — פרובירט נאכאמאל';}
+  btn.disabled=false;}
+</script></body></html>
