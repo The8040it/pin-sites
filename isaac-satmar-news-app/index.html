@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>סאטמאר נייעס</title>
+<meta name="description" content="סאטמאר נייעס – אלע סאטמארער נייעס אויף אידיש אין איין ארט.">
+<meta name="theme-color" content="#0E1E3F">
+<meta name="color-scheme" content="light dark">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" href="assets/frl.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="styles.css%3Fv=2.css">
+<script>try{var t='auto';try{t=JSON.parse(localStorage.getItem('sn.theme')||'"auto"')}catch(e){}var d=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';var f=localStorage.getItem('sn.fs');if(f)document.documentElement.style.setProperty('--fs',f);}catch(e){}</script>
+</head>
+<body>
+<div id="app">
+  <header class="top" id="top">
+    <div class="mast">
+      <div class="top-btns">
+        <button class="ibtn" id="btnInstall" hidden aria-label="אינסטאלירן">⤓</button>
+        <button class="ibtn" id="btnSize" aria-label="גרייס פון שריפט"><span class="aa">א<small>א</small></span></button>
+      </div>
+      <div class="mast-text">
+        <h1 class="brand">סאטמאר נייעס</h1>
+        <div class="orn">✦</div>
+        <div class="sub" id="subline">אלע סאטמארער נייעס</div>
+      </div>
+      <div class="top-btns l">
+        <button class="ibtn" id="btnTheme" aria-label="ליכטיג / טונקל">☾</button>
+        <button class="ibtn" id="btnRefresh" aria-label="דערפרישן">⟳</button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs" aria-label="טיילן"></nav>
+  </header>
+  <nav class="chips" id="chips" aria-label="מקורות"></nav>
+  <div class="ptr" id="ptr"><div class="ptr-dot"></div><span id="ptrText">ציט אראפ צו דערפרישן</span></div>
+  <main id="main" class="main" tabindex="-1"></main>
+  <div class="mini" id="mini" hidden>
+    <button class="mini-play" id="miniPlay" aria-label="שפיל">❚❚</button>
+    <div class="mini-info"><div class="mini-title" id="miniTitle"></div><div class="mini-bar"><div id="miniProg"></div></div></div>
+    <button class="mini-x" id="miniClose" aria-label="פארמאך">✕</button>
+  </div>
+  <nav class="bottom" id="bottom" aria-label="הויפט נאוויגאציע">
+    <button data-nav="news" class="on"><span class="bi">🗞️</span><span>נייעס</span></button>
+    <button data-nav="saved"><span class="bi">🔖</span><span>געהאלטן</span></button>
+    <button data-nav="more"><span class="bi">⚙️</span><span>איינשטעלונגען</span></button>
+  </nav>
+</div>
+<section class="reader" id="reader" hidden aria-modal="true" role="dialog">
+  <div class="rbar">
+    <button class="ibtn" id="rBack" aria-label="צוריק">→</button>
+    <div class="rbar-title" id="rbarTitle"></div>
+    <button class="ibtn" id="rSize" aria-label="גרייס פון שריפט"><span class="aa">א<small>א</small></span></button>
+    <button class="ibtn" id="rSave" aria-label="היטן">🔖</button>
+    <button class="ibtn" id="rShare" aria-label="שיקן">⇪</button>
+  </div>
+  <div class="rscroll" id="rscroll"><article class="art" id="art"></article></div>
+</section>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<audio id="player" preload="none"></audio>
+<noscript><p style="padding:24px">די אפ דארף JavaScript.</p></noscript>
+<script src="app.js%3Fv=2" defer></script>
+</body>
+</html>

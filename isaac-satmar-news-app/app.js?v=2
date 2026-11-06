@@ -1,0 +1,320 @@
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const main = $('#main');
+const TABS = [['all', 'הכל'], ['rebbe', 'דער רבי'], ['wburg', 'וויליאמסבורג'], ['kj', 'קרית יואל'], ['others', 'מאנסי / אנדערע קהילות'], ['mosdos', 'מוסדות'], ['video', 'ווידעא / הערן']];
+const COLORS = ['#C9A240', '#2E5AAC', '#8E1B2B', '#1F7A5A', '#7A4BB0', '#C2621A', '#16808C', '#A23B72', '#5C6B1F', '#3F51B5', '#9C7A26', '#B03A2E', '#2C7DA0', '#6D4C41', '#00897B', '#7B1FA2', '#455A64', '#AD1457', '#558B2F', '#283593'];
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} }
+};
+let SOURCES = [], SRC = {};
+const state = { nav: 'news', tab: 'all', src: 'all', shown: 30, feed: null, feedKey: '', loading: false, reader: null };
+const itemsIndex = new Map();
+const FS_STEPS = [1, 1.15, 1.3, 1.5, 0.9];
+
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function toast(t) { const el = $('#toast'); el.textContent = t; el.hidden = false; clearTimeout(toast._t); toast._t = setTimeout(() => el.hidden = true, 2200); }
+async function api(path) {
+  const r = await fetch(path, { cache: 'no-store' });
+  const j = await r.json();
+  if (!j.ok && j.kind !== 'offline') throw new Error(j.kind || 'error');
+  return j;
+}
+function srcOn() { const st = LS.get('sn.src', {}); return SOURCES.filter(s => st[s.key] !== undefined ? st[s.key] : s.def).map(s => s.key); }
+function setSrc(k, on) { const st = LS.get('sn.src', {}); st[k] = on; LS.set('sn.src', st); }
+function showA() { return LS.get('sn.showA', false); }
+function badge(it) { const s = SRC[it.src] || {}; return `<span class="badge"><i class="dot" style="background:${s.color || '#999'}"></i>${esc(s.short || it.srcName || '')}</span>`; }
+function reg(it) { const k = it.url || it.id; itemsIndex.set(k, it); return esc(k); }
+function ago(ts) {
+  if (!ts) return '';
+  const m = Math.round((Date.now() - ts) / 60000);
+  if (m < 1) return 'יעצט';
+  if (m < 60) return 'פאר ' + m + ' מינוט';
+  const h = Math.round(m / 60); if (h < 24) return 'פאר ' + h + (h === 1 ? ' שעה' : ' שעה');
+  const d = Math.round(h / 24); return 'פאר ' + d + (d === 1 ? ' טאג' : ' טעג');
+}
+function when(it) {
+  if (it.hebDate || (it.src && /^ab[zwa]$/.test(it.src) && it.date)) return it.date;
+  const a = ago(it.ts); return a || it.date || '';
+}
+
+/* ---------- sources ---------- */
+async function loadSources() {
+  const cached = LS.get('sn.srcList', null);
+  if (cached) applySources(cached);
+  try { const d = await api('/api/sources'); applySources(d.sources); LS.set('sn.srcList', d.sources); } catch (_) { if (!cached) throw new Error('no sources'); }
+}
+function applySources(list) {
+  SOURCES = list.map((s, i) => ({ ...s, color: COLORS[i % COLORS.length] }));
+  SRC = Object.fromEntries(SOURCES.map(s => [s.key, s]));
+}
+
+/* ---------- feed ---------- */
+async function loadFeed(force) {
+  const on = srcOn(); const key = on.join(',');
+  if (!force && state.feed && state.feedKey === key && Date.now() - state.feedAt < 240000) return state.feed;
+  const d = await api('/api/feed?src=' + encodeURIComponent(key) + (force ? '&t=' + Date.now() : ''));
+  state.feed = d; state.feedKey = key; state.feedAt = Date.now();
+  LS.set('sn.lastFeed', { at: Date.now(), key, d });
+  return d;
+}
+function visible(items) {
+  const on = new Set(srcOn()); const a = showA();
+  return items.filter(it => on.has(it.src) && (it.side !== 'a' || (SRC[it.src] || {}).side === 'a' || a));
+}
+
+function cardHTML(it, mode) {
+  const k = reg(it);
+  const img = it.image ? `<div class="im"><img loading="lazy" src="${esc(it.image)}" alt="" onerror="this.closest('.im').remove()">${it.video || it.yt ? `<span class="vid">▶ ${esc(it.duration || 'ווידעא')}</span>` : it.audio ? `<span class="vid">🎧 ${esc(it.duration || 'הערן')}</span>` : ''}</div>` : '';
+  const sum = it.summary && it.summary !== it.title ? `<p class="sm">${esc(it.summary)}</p>` : '';
+  const ft = `<div class="ft">${badge(it)}<span>${esc(when(it))}</span>${!it.image && (it.video || it.yt || it.tgvid) ? '<span>▶ ווידעא</span>' : ''}${!it.image && it.audio ? '<span>🎧</span>' : ''}</div>`;
+  if (!img) return `<article class="card txt" data-open="${k}"><div class="tx"><h3>${esc(it.title)}</h3>${sum}${ft}</div></article>`;
+  if (mode === 'row') return `<article class="card row" data-open="${k}">${img}<div class="tx"><h3>${esc(it.title)}</h3>${ft}</div></article>`;
+  return `<article class="card${mode === 'hero' ? ' hero' : ''}" data-open="${k}">${img}<div class="tx"><h3>${esc(it.title)}</h3>${sum}${ft}</div></article>`;
+}
+function feedHTML(d) {
+  let items = visible(d.items || []);
+  if (state.src !== 'all') items = items.filter(it => it.src === state.src);
+  if (state.tab !== 'all') items = items.filter(it => (it.secs || []).includes(state.tab));
+  const bad = (d.sources || []).filter(s => !s.ok && srcOn().includes(s.key)).map(s => (SRC[s.key] || {}).short || s.name);
+  let h = bad.length ? `<div class="warn">⚠ ${esc(bad.join(', '))} — לאדט נישט יעצט, די אנדערע יא.</div>` : '';
+  const tabName = (TABS.find(t => t[0] === state.tab) || [])[1];
+  if (state.tab !== 'all' || state.src !== 'all') h += `<h2 class="pg">${esc(state.tab !== 'all' ? tabName : '')}${state.tab !== 'all' && state.src !== 'all' ? ' · ' : ''}${state.src !== 'all' ? esc((SRC[state.src] || {}).name || '') : ''}</h2>`;
+  if (!items.length) return h + `<div class="empty">דערווייל קיין נייעס דא אין דעם טייל.<br><small>פרובירט "הכל" אדער צינדט אן מער מקורות אין ⚙️</small></div>`;
+  let firstImg = true;
+  const shown = items.slice(0, state.shown);
+  h += shown.map((it, i) => {
+    let mode = 'row';
+    if (it.image && firstImg) { mode = 'hero'; firstImg = false; } else if (i % 5 === 3) mode = 'big';
+    return cardHTML(it, mode);
+  }).join('');
+  if (items.length > state.shown) h += `<button class="more-btn" data-feedmore>ווייז מער ⌄ (${items.length - state.shown})</button>`;
+  return h;
+}
+function renderChips() {
+  $('#tabs').innerHTML = TABS.map(([k, n]) => `<button class="tab ${state.tab === k ? 'on' : ''}" data-tab="${k}">${n}</button>`).join('');
+  const on = srcOn();
+  $('#chips').innerHTML = `<button class="chip ${state.src === 'all' ? 'on' : ''}" data-src="all">✦ אלע מקורות</button>` +
+    SOURCES.map(s => `<button class="chip ${state.src === s.key ? 'on' : ''} ${on.includes(s.key) ? '' : 'off'}" data-src="${s.key}"><i class="dot" style="background:${s.color}"></i>${esc(s.short)}</button>`).join('');
+  $('#tabs').hidden = $('#chips').hidden = state.nav !== 'news';
+}
+function skeleton() { return '<div class="sk" style="height:300px"></div><div class="sk" style="height:110px"></div><div class="sk" style="height:110px"></div><div class="sk" style="height:110px"></div>'; }
+function subline(d) {
+  const n = d ? visible(d.items || []).length : 0;
+  $('#subline').textContent = (hebToday() ? hebToday() + ' · ' : '') + (n ? n + ' נייעס' : 'אלע סאטמארער נייעס');
+}
+function hebToday() { try { return new Intl.DateTimeFormat('he-u-ca-hebrew', { day: 'numeric', month: 'long' }).format(new Date()).replace(/^(\d+)/, d => gematria(+d)); } catch (_) { return ''; } }
+function gematria(n) { const o = ['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'], t = ['', 'י', 'כ', 'ל']; if (n === 15) return 'ט"ו'; if (n === 16) return 'ט"ז'; const s = t[Math.floor(n / 10)] + o[n % 10]; return s.length > 1 ? s.slice(0, -1) + '"' + s.slice(-1) : s + "'"; }
+
+async function show(force) {
+  renderChips();
+  document.querySelectorAll('.bottom button').forEach(b => b.classList.toggle('on', b.dataset.nav === state.nav));
+  if (state.nav === 'saved') { main.innerHTML = renderSaved(); return; }
+  if (state.nav === 'more') { main.innerHTML = renderMore(); return; }
+  if (!state.feed || force || state.feedKey !== srcOn().join(',')) {
+    if (!state.feed) {
+      const last = LS.get('sn.lastFeed', null);
+      if (last && last.d && last.key === srcOn().join(',')) { state.feed = last.d; state.feedKey = last.key; state.feedAt = 0; main.innerHTML = feedHTML(last.d); }
+      else main.innerHTML = skeleton();
+    }
+    try { const d = await loadFeed(force); if (state.nav === 'news') main.innerHTML = feedHTML(d); subline(d); }
+    catch (e) { if (!state.feed) main.innerHTML = `<div class="empty">קען נישט לאדן די נייעס יעצט.<br><button class="more-btn" style="margin-top:14px" data-retry>פרובירן נאכאמאל</button></div>`; else toast('קען נישט דערפרישן יעצט'); }
+    return;
+  }
+  main.innerHTML = feedHTML(state.feed); subline(state.feed);
+}
+
+/* ---------- saved ---------- */
+function saved() { return LS.get('sn.saved', []); }
+function isSaved(u) { return saved().some(x => x.url === u); }
+function toggleSave(it) {
+  let s = saved(); const on = !s.some(x => x.url === it.url);
+  if (on) s.unshift({ ...it, also: undefined }); else s = s.filter(x => x.url !== it.url);
+  LS.set('sn.saved', s.slice(0, 300)); toast(on ? 'געהאלטן 🔖' : 'אראפגענומען'); return on;
+}
+function renderSaved() {
+  const s = saved();
+  let h = `<h2 class="pg">🔖 געהאלטענע נייעס</h2>`;
+  if (!s.length) return h + `<div class="empty">נאך גארנישט געהאלטן.<br>דריקט 🔖 ביי א נייעס צו היטן עס דא.</div>`;
+  return h + s.map(it => cardHTML(it, 'row')).join('');
+}
+
+/* ---------- settings ---------- */
+function renderMore() {
+  const th = LS.get('sn.theme', 'auto'); const fs = LS.get('sn.fsv', 1); const on = srcOn();
+  const row = s => `<div class="row"><span>${badge({ src: s.key })} ${esc(s.name)}</span><button class="sw ${on.includes(s.key) ? 'on' : ''}" data-srctoggle="${s.key}" aria-label="${esc(s.name)}"><i></i></button></div>`;
+  const grp = (g, title, hint) => { const l = SOURCES.filter(s => s.group === g); return l.length ? `<div class="grp">${title}</div>${hint ? `<div class="hint">${hint}</div>` : ''}${l.map(row).join('')}` : ''; };
+  return `<h2 class="pg">⚙️ איינשטעלונגען</h2>
+  <div class="set">
+    <div class="row"><span>קאליר</span><div class="seg">${[['light', 'ליכטיג'], ['dark', 'טונקל'], ['auto', 'אויטאמאטיש']].map(([k, n]) => `<button data-theme-set="${k}" class="${th === k ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+    <div class="row"><span>גרייס פון שריפט</span><div class="seg">${[[0.9, 'קליין'], [1, 'נארמאל'], [1.3, 'גרויס'], [1.5, 'זייער גרויס']].map(([k, n]) => `<button data-fs-set="${k}" class="${fs == k ? 'on' : ''}">${n}</button>`).join('')}</div></div>
+  </div>
+  <h2 class="pg" style="font-size:20px">📰 מקורות</h2>
+  <div class="set">
+    ${grp('satmar', '🌴 סאטמאר — ר\' זלמן לייב שליט"א (וויליאמסבורג)', '')}
+    ${grp('general', '🌐 אלגעמיינע אידישע נייעס', 'פון די מקורות ווערן נאר געוויזן די נייעס וואס רעדן פון סאטמאר.')}
+    ${grp('other', '🏛 סאטמאר — ר\' אהרן שליט"א (קרית יואל)', 'די מקורות זענען אויסגעלאשן. צינדט אן וואס איר ווילט.')}
+    <div class="row"><span>ווייז אויך נייעס פון ר' אהרן'ס הויף פון די אלגעמיינע מקורות</span><button class="sw ${showA() ? 'on' : ''}" data-showa aria-label="ר' אהרן'ס הויף"><i></i></button></div>
+  </div>
+  ${deferredInstall ? `<div class="set"><div class="row"><span>אינסטאלירן אויפן טעלעפאן</span><button class="chip on" data-install>אינסטאלירן</button></div></div>` : ''}
+  <div class="set"><div class="about">
+    <b>סאטמאר נייעס</b> קלייבט צוזאם סאטמארער נייעס אויף אידיש פון ${SOURCES.length} מקורות: א בליק לייוו, סאטמאר טעלעגראם קאנאלן, JDN, Yiddish24, בחצרות הקודש, דער איד און נאך. ביי יעדע נייעס שטייט פון וואו זי קומט, מיט א לינק צום ארגינעל.<br><br>
+    צו אינסטאלירן: עפנט אין Chrome ← ⋮ ← "Install app".
+  </div></div>`;
+}
+
+/* ---------- reader ---------- */
+const reader = $('#reader'), art = $('#art');
+function canFetch(it) { return !it.full && /^https:\/\/((www\.)?yiddish24\.com|jdn\.news|(www\.)?bechatzros\.com|(www\.)?ahblicklive\.com\/post\.php)/.test(it.url || ''); }
+function openReader(it, push = true) {
+  state.reader = it; reader.hidden = false; document.body.style.overflow = 'hidden';
+  if (push) history.pushState({ reader: it.url }, '', '?a=' + encodeURIComponent(it.url));
+  $('#rscroll').scrollTop = 0;
+  if (!canFetch(it)) { paintReader(it, false); return; }
+  paintReader(it, true);
+  api('/api/item?u=' + encodeURIComponent(it.url)).then(d => {
+    if (state.reader !== it) return;
+    const x = d.item || {};
+    const full = { ...it, paras: (x.paras || []).join('').length > (it.paras || []).join('').length ? x.paras : it.paras, image: it.image || x.image, video: it.video || x.video, audio: it.audio || x.audio, title: it.title && it.title !== '…' ? it.title : x.title, gallery: x.gallery || 0, duration: it.duration || x.duration };
+    state.reader = full; itemsIndex.set(full.url, full); paintReader(full, false);
+  }).catch(() => { if (state.reader === it) paintReader(it, false); });
+}
+function paintReader(it, loading) {
+  const s = SRC[it.src] || {};
+  $('#rbarTitle').textContent = s.name || 'סאטמאר נייעס';
+  $('#rSave').classList.toggle('on', isSaved(it.url));
+  const paras = it.paras || [];
+  const av = it.yt ? `<div class="ytbox"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(it.yt)}?playsinline=1&rel=0&modestbranding=1" title="${esc(it.title)}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>`
+    : it.video ? `<video controls playsinline preload="metadata" ${it.image ? `poster="${esc(it.image)}"` : ''} src="${esc(it.video)}"></video>`
+    : it.tgvid ? `<div class="abox"><a class="aplay" href="${esc(it.url)}" target="_blank" rel="noopener">▶</a><div>📹 ווידעא — זעט עס אויף טעלעגראם</div></div>`
+    : it.audio ? `<div class="abox"><button class="aplay" data-play="${reg(it)}">${player.cur === it.audio && !player.el.paused ? '❚❚' : '▶'}</button><div><div>הערט צו</div><div class="meta">${esc(it.duration ? '⏱ ' + it.duration : '')}</div></div></div>` : '';
+  const pic = !it.video && !it.yt && it.image ? `<div class="pic"><img src="${esc(it.image)}" alt="" onerror="this.parentNode.remove()"></div>` : '';
+  const isAb = /ahblicklive\.com\/post\.php/.test(it.url || '');
+  const note = !loading && !paras.length && !(it.audio || it.video || it.yt) ? `<p class="note">${isAb || it.gallery ? '📷 דאס איז א בילדער־באריכט. עפנט דעם ארגינעל אונטן צו זען אלע בילדער.' : 'דער גאנצער טעקסט איז אויפן ארגינעל — דריקט אונטן.'}</p>` : '';
+  const link = /^https:\/\/t\.me\//.test(it.url) ? 'עפן אויף טעלעגראם ↗' : /youtube\.com/.test(it.url) ? 'עפן אויף YouTube ↗' : isAb ? 'עפן אויף א בליק לייוו (אלע בילדער) ↗' : 'עפן דעם ארגינעל ↗';
+  art.innerHTML = `<span class="tag">${esc(it.sectionName || 'סאטמאר נייעס')}</span>
+    <h1>${esc(it.title)}</h1><div class="meta">${esc([when(it), it.duration ? '⏱ ' + it.duration : ''].filter(Boolean).join(' · '))}</div>
+    ${pic}${av}
+    <div class="body">${paras.map(p => `<p dir="rtl">${esc(p)}</p>`).join('')}${loading && !paras.length ? '<div class="sk" style="height:120px"></div>' : ''}${note}</div>
+    <div class="srcbox" style="border-right-color:${s.color || 'var(--gold)'}"><div class="s1">פֿון ${esc(s.name || it.srcName || '')}</div>
+      <a href="${esc(it.url)}" target="_blank" rel="noopener">${link}</a>
+      ${it.also && it.also.length ? `<div class="meta" style="margin-top:8px">די זעלבע נייעס אויך ביי: ${it.also.map(x => `<a class="alsolink" href="${esc(x.url)}" target="_blank" rel="noopener">${esc((SRC[x.src] || {}).name || x.srcName)} ↗</a>`).join(' ')}</div>` : ''}</div>
+    <div class="acts"><a class="wa" href="${waLink(it)}" target="_blank" rel="noopener">שיקן אין WhatsApp</a>
+      <button class="sv ${isSaved(it.url) ? 'on' : ''}" data-save>${isSaved(it.url) ? '🔖 געהאלטן' : '🔖 היטן'}</button></div>`;
+}
+function waLink(it) { return 'https://wa.me/?text=' + encodeURIComponent(it.title + '\n\n' + it.url + '\n\n— פון ' + ((SRC[it.src] || {}).name || it.srcName || '') + ', דורך סאטמאר נייעס'); }
+function closeReader(fromPop) {
+  if (reader.hidden) return;
+  reader.hidden = true; document.body.style.overflow = ''; state.reader = null;
+  art.querySelectorAll('video').forEach(v => v.pause()); art.querySelectorAll('iframe').forEach(f => f.remove());
+  if (!fromPop && history.state && history.state.reader) history.back();
+}
+window.addEventListener('popstate', () => {
+  const u = new URLSearchParams(location.search).get('a');
+  if (!u) closeReader(true); else if (!state.reader || state.reader.url !== u) openReader(itemsIndex.get(u) || { url: u, title: '…', paras: [] }, false);
+});
+
+/* ---------- audio ---------- */
+const player = { el: $('#player'), cur: '', item: null };
+function playItem(it) {
+  const el = player.el;
+  if (player.cur === it.audio) { el.paused ? el.play() : el.pause(); return; }
+  player.cur = it.audio; player.item = it; el.src = it.audio; el.play().catch(() => toast('קען נישט שפילן'));
+  $('#miniTitle').textContent = it.title; $('#mini').hidden = false;
+  if ('mediaSession' in navigator) { try { navigator.mediaSession.metadata = new MediaMetadata({ title: it.title, artist: (SRC[it.src] || {}).name || 'סאטמאר נייעס' }); } catch (_) {} }
+}
+function syncPlay() { const p = !player.el.paused; $('#miniPlay').textContent = p ? '❚❚' : '▶'; document.querySelectorAll('[data-play]').forEach(b => { const it = itemsIndex.get(b.dataset.play); b.textContent = it && it.audio === player.cur && p ? '❚❚' : '▶'; }); }
+['play', 'pause', 'ended'].forEach(e => player.el.addEventListener(e, syncPlay));
+player.el.addEventListener('timeupdate', () => { const el = player.el; if (el.duration) $('#miniProg').style.width = (100 * el.currentTime / el.duration) + '%'; });
+$('#miniPlay').onclick = () => { player.el.paused ? player.el.play() : player.el.pause(); };
+$('#miniClose').onclick = () => { player.el.pause(); player.el.removeAttribute('src'); player.cur = ''; $('#mini').hidden = true; syncPlay(); };
+$('#miniTitle').onclick = () => { if (player.item) openReader(player.item); };
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-play],[data-open],[data-src],[data-tab],[data-feedmore],[data-srctoggle],[data-showa],[data-retry],[data-save],[data-theme-set],[data-fs-set],[data-install],[data-nav]');
+  if (!t) return;
+  const ds = t.dataset;
+  if (ds.play) { e.stopPropagation(); const it = itemsIndex.get(ds.play); if (it) playItem(it); return; }
+  if (ds.open) { const it = itemsIndex.get(ds.open); if (it) openReader(it); return; }
+  if (ds.tab) { state.tab = ds.tab; state.shown = 30; scrollTo(0, 0); show(); t.scrollIntoView({ inline: 'center', block: 'nearest' }); return; }
+  if (ds.src) {
+    const k = ds.src;
+    if (k !== 'all' && !srcOn().includes(k)) { setSrc(k, true); toast((SRC[k] || {}).name + ' — אנגעצונדן ✔'); }
+    state.src = k; state.shown = 30; scrollTo(0, 0); show(); return;
+  }
+  if (ds.nav) { if (state.nav === ds.nav) { scrollTo({ top: 0, behavior: 'smooth' }); return; } state.nav = ds.nav; scrollTo(0, 0); show(); return; }
+  if (t.hasAttribute('data-feedmore')) { state.shown += 30; show(); return; }
+  if (ds.srctoggle) { const k = ds.srctoggle; const on = !srcOn().includes(k); setSrc(k, on); if (!on && state.src === k) state.src = 'all'; t.classList.toggle('on', on); state.feed = state.feed; return; }
+  if (t.hasAttribute('data-showa')) { const v = !showA(); LS.set('sn.showA', v); t.classList.toggle('on', v); return; }
+  if (t.hasAttribute('data-retry')) { show(true); return; }
+  if (t.hasAttribute('data-save')) { const on = toggleSave(state.reader); t.classList.toggle('on', on); t.textContent = on ? '🔖 געהאלטן' : '🔖 היטן'; $('#rSave').classList.toggle('on', on); return; }
+  if (ds.themeSet) { setTheme(ds.themeSet); show(); return; }
+  if (ds.fsSet) { setFs(+ds.fsSet); show(); return; }
+  if (t.hasAttribute('data-install')) { doInstall(); }
+});
+$('#rBack').onclick = () => closeReader();
+$('#rSave').onclick = () => { if (!state.reader) return; const on = toggleSave(state.reader); $('#rSave').classList.toggle('on', on); const sb = art.querySelector('[data-save]'); if (sb) { sb.classList.toggle('on', on); sb.textContent = on ? '🔖 געהאלטן' : '🔖 היטן'; } };
+$('#rShare').onclick = async () => {
+  const it = state.reader; if (!it) return;
+  if (navigator.share) { try { await navigator.share({ title: it.title, text: it.title, url: it.url }); } catch (_) {} return; }
+  location.href = waLink(it);
+};
+$('#btnRefresh').onclick = () => window.__refresh();
+
+/* theme + font size */
+function setTheme(t) { LS.set('sn.theme', t); applyTheme(); }
+function applyTheme() {
+  const t = LS.get('sn.theme', 'auto');
+  const dark = t === 'dark' || (t === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  $('#btnTheme').textContent = dark ? '☀' : '☾';
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+$('#btnTheme').onclick = () => { setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); if (state.nav === 'more') show(); };
+function setFs(v) { LS.set('sn.fsv', v); localStorage.setItem('sn.fs', String(v)); document.documentElement.style.setProperty('--fs', v); }
+function cycleFs() { const cur = LS.get('sn.fsv', 1); const i = FS_STEPS.indexOf(cur); const n = FS_STEPS[(i + 1) % FS_STEPS.length]; setFs(n); toast('שריפט: ' + Math.round(n * 100) + '%'); }
+$('#btnSize').onclick = cycleFs; $('#rSize').onclick = cycleFs;
+applyTheme();
+
+/* pull to refresh */
+(function () {
+  const ptr = $('#ptr'); let y0 = null, dy = 0, busy = false;
+  window.addEventListener('touchstart', e => { if (!reader.hidden || busy) return; if (window.scrollY <= 0) { y0 = e.touches[0].clientY; dy = 0; } else y0 = null; }, { passive: true });
+  window.addEventListener('touchmove', e => {
+    if (y0 == null) return; dy = e.touches[0].clientY - y0;
+    if (dy > 0 && window.scrollY <= 0) { ptr.style.transition = 'none'; ptr.style.height = Math.min(70, dy * 0.45) + 'px'; $('#ptrText').textContent = dy > 140 ? 'לאזט אפ צו דערפרישן' : 'ציט אראפ צו דערפרישן'; }
+  }, { passive: true });
+  window.addEventListener('touchend', async () => { if (y0 == null) return; y0 = null; ptr.style.transition = ''; if (dy > 140) await refresh(); else ptr.style.height = '0'; });
+  async function refresh() {
+    if (busy) return; busy = true; ptr.style.height = '54px'; ptr.classList.add('spin'); $('#ptrText').textContent = 'דערפרישט…';
+    try { state.nav = 'news'; await show(true); toast('דערפרישט ✔'); } finally { ptr.classList.remove('spin'); ptr.style.height = '0'; busy = false; }
+  }
+  window.__refresh = refresh;
+})();
+
+/* install */
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredInstall = e; $('#btnInstall').hidden = false; });
+async function doInstall() { if (!deferredInstall) return; deferredInstall.prompt(); try { await deferredInstall.userChoice; } catch (_) {} deferredInstall = null; $('#btnInstall').hidden = true; }
+$('#btnInstall').onclick = doInstall;
+window.addEventListener('appinstalled', () => { $('#btnInstall').hidden = true; toast('אינסטאלירט ✔'); });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
+
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && Date.now() - hiddenAt > 240000 && reader.hidden && state.nav === 'news') show(true); });
+
+/* start */
+(async () => {
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('tab') && TABS.some(t => t[0] === qs.get('tab'))) state.tab = qs.get('tab');
+  if (qs.get('nav') && ['news', 'saved', 'more'].includes(qs.get('nav'))) state.nav = qs.get('nav');
+  main.innerHTML = skeleton();
+  try { await loadSources(); } catch (_) { main.innerHTML = `<div class="empty">קען נישט לאדן יעצט.<br><button class="more-btn" style="margin-top:14px" onclick="location.reload()">פרובירן נאכאמאל</button></div>`; return; }
+  show();
+  const deep = qs.get('a');
+  if (deep && /^https:\/\//.test(deep)) { history.replaceState({}, '', '/'); openReader({ url: deep, title: '…', paras: [] }); }
+})();
+window.__sn = { state, openReader, closeReader, show };
+})();

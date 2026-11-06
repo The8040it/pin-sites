@@ -1,0 +1,61 @@
+{
+ "name": "סאטמאר נייעס",
+ "short_name": "סאטמאר נייעס",
+ "description": "אלע סאטמארער נייעס אויף אידיש: דער רבי, וויליאמסבורג, קרית יואל, מוסדות און ווידעא.",
+ "id": "/",
+ "start_url": "/?source=pwa",
+ "scope": "/",
+ "display": "standalone",
+ "orientation": "portrait",
+ "dir": "rtl",
+ "lang": "yi",
+ "background_color": "#0E1E3F",
+ "theme_color": "#0E1E3F",
+ "categories": [
+  "news"
+ ],
+ "icons": [
+  {
+   "src": "/assets/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/assets/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/assets/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "דער רבי",
+   "short_name": "דער רבי",
+   "url": "/?tab=rebbe",
+   "icons": [
+    {
+     "src": "/assets/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "געהאלטענע",
+   "short_name": "געהאלטן",
+   "url": "/?nav=saved",
+   "icons": [
+    {
+     "src": "/assets/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  }
+ ]
+}
