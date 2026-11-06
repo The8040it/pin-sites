@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="yi" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Apple Maps</title>
+<meta name="description" content="Apple Maps אויף דיין Android – זוכן, וועגווייזער, אין איין קנעפל.">
+<meta property="og:title" content="Apple Maps">
+<meta property="og:description" content="Apple Maps אויף דיין Pixel – זוכן און וועגווייזער">
+<meta property="og:image" content="/icon-512.png">
+<meta name="theme-color" content="#0a7aff">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>
+/* Fast path: installed app opens straight into Apple Maps (once per launch). */
+(function(){
+  var M='https://maps.apple.com/';
+  var p=new URLSearchParams(location.search);
+  var shared=[p.get('text'),p.get('title')].filter(Boolean).join(' ').trim();
+  if(p.get('url')&&!shared){shared=p.get('url');}
+  if(shared){location.replace(M+'?q='+encodeURIComponent(shared));return;}
+  var standalone=matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches;
+  var auto=localStorage.getItem('am_auto')!=='0';
+  if((standalone||p.get('app')==='1')&&auto&&!p.has('home')&&!sessionStorage.getItem('am_launched')){
+    sessionStorage.setItem('am_launched','1');
+    document.documentElement.className='launching';
+    location.href=M;
+  }
+})();
+</script>
+<style>
+@font-face{font-family:"FRL";src:url(frl.woff2) format("woff2");font-display:swap}
+:root{--blue:#0a7aff;--ink:#1c1c1e;--sub:#6b7280;--card:#fff;--bg:#f2f3f5;--line:#e3e5e8}
+@media (prefers-color-scheme:dark){:root{--ink:#f2f2f7;--sub:#9ca3af;--card:#1c1c1e;--bg:#0f0f11;--line:#2c2c2e}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:"FRL","Frank Ruhl Libre",system-ui,-apple-system,Roboto,sans-serif;font-size:19px;line-height:1.45;min-height:100vh;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.launching body>*{visibility:hidden}
+.launching body:after{content:"…";position:fixed;inset:0;display:grid;place-items:center;font-size:40px;color:var(--blue);visibility:visible}
+.en{font-family:system-ui,-apple-system,Roboto,sans-serif;direction:ltr;unicode-bidi:isolate}
+header{background:linear-gradient(160deg,#0a7aff,#34aadc);color:#fff;padding:22px 18px 74px;text-align:center;position:relative}
+header img{width:72px;height:72px;border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+header h1{margin:8px 0 0;font-size:30px;line-height:1.1;font-family:system-ui,-apple-system,Roboto,sans-serif;font-weight:700}
+header p{margin:4px 0 0;opacity:.92;font-size:17px}
+#install{position:absolute;top:14px;left:14px;background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:6px 14px;font:inherit;font-size:16px;display:none}
+main{max-width:520px;margin:-56px auto 0;padding:0 14px 28px;position:relative}
+.big{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:68px;border:0;border-radius:20px;background:var(--card);color:var(--blue);font:inherit;font-size:23px;font-weight:700;box-shadow:0 8px 24px rgba(10,122,255,.18);text-decoration:none}
+.big svg{width:30px;height:30px}
+.big small{display:block;font-size:14px;color:var(--sub);font-weight:400}
+.card{background:var(--card);border-radius:18px;padding:16px;margin-top:14px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card h2{margin:0 0 10px;font-size:20px;display:flex;align-items:center;gap:8px}
+.card h2 .en{font-size:14px;color:var(--sub);font-weight:400;margin-inline-start:auto}
+.row{display:flex;gap:8px}
+input[type=search],input[type=text]{flex:1;min-width:0;height:52px;border:1.5px solid var(--line);border-radius:14px;padding:0 14px;font:inherit;font-size:18px;background:var(--bg);color:var(--ink);outline:none}
+input:focus{border-color:var(--blue)}
+.go{height:52px;min-width:76px;border:0;border-radius:14px;background:var(--blue);color:#fff;font:inherit;font-size:18px;font-weight:700;padding:0 14px}
+.stack{display:flex;flex-direction:column;gap:8px}
+.stack input{flex:none;width:100%}
+.lbl{font-size:15px;color:var(--sub);margin:2px 4px -2px}
+.hint{font-size:14px;color:var(--sub);margin:6px 2px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:16px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toggle{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.toggle label{flex:1}
+.switch{position:relative;width:52px;height:32px;flex:none}
+.switch input{opacity:0;width:0;height:0}
+.switch span{position:absolute;inset:0;background:#c7c7cc;border-radius:999px;transition:.2s}
+.switch span:before{content:"";position:absolute;top:3px;right:3px;width:26px;height:26px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch input:checked+span{background:#34c759}
+.switch input:checked+span:before{transform:translateX(-20px)}
+footer{text-align:center;color:var(--sub);font-size:13px;padding:6px 16px 24px}
+</style>
+</head>
+<body>
+<header>
+  <button id="install" type="button">אינסטאלירן</button>
+  <img src="icon-192.png" alt="" width="72" height="72">
+  <h1>Apple Maps</h1>
+  <p>מאפע, זוכן און וועגווייזער</p><p class="en" style="font-size:14px;opacity:.85;margin-top:0">Maps, search &amp; directions</p>
+</header>
+<main>
+  <a class="big" id="open" href="https://maps.apple.com/">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+    <span>עפן די מאפע<small class="en">Open Apple Maps</small></span>
+  </a>
+
+  <form class="card" id="searchForm" autocomplete="off">
+    <h2>🔎 זוך אן ארט <span class="en">Search</span></h2>
+    <div class="row">
+      <input type="search" id="q" enterkeyhint="search" placeholder="אדרעס, געשעפט, שטאט…" aria-label="Search">
+      <button class="go" type="submit">זוך</button>
+    </div>
+    <div class="chips" id="recent"></div>
+  </form>
+
+  <form class="card" id="dirForm" autocomplete="off">
+    <h2>🚗 וועגווייזער <span class="en">Directions</span></h2>
+    <div class="stack">
+      <div class="lbl">וואוהין? · <span class="en">To</span></div>
+      <input type="text" id="to" enterkeyhint="go" placeholder="אדרעס אדער ארט" aria-label="Destination">
+      <div class="lbl">פון וואו? · <span class="en">From (optional)</span></div>
+      <input type="text" id="from" enterkeyhint="go" placeholder="ליידיג = פון וואו איך בין" aria-label="Start (optional)">
+      <button class="go" type="submit" style="width:100%">ווייז מיר דעם וועג <span class="en" style="font-weight:400;opacity:.85">· Go</span></button>
+    </div>
+    <p class="hint">לאז „פון וואו" ליידיג, וועט עס אנהייבן פון וואו דו ביסט יעצט.<br><span class="en">Leave “From” empty to start where you are.</span></p>
+  </form>
+
+  <div class="card toggle">
+    <label for="auto">עפן גלייך די מאפע ווען מען עפנט די אפ<br><span class="en hint">Open the map right away when the app starts</span></label>
+    <span class="switch"><input type="checkbox" id="auto"><span></span></span>
+  </div>
+</main>
+<footer>
+  <span class="en">Opens Apple’s own maps.apple.com · not made by Apple</span>
+</footer>
+<script>
+var M='https://maps.apple.com/';
+var $=function(id){return document.getElementById(id)};
+function go(u){location.href=u}
+function recent(){try{return JSON.parse(localStorage.getItem('am_recent')||'[]')}catch(e){return[]}}
+function remember(s){var r=recent().filter(function(x){return x!==s});r.unshift(s);localStorage.setItem('am_recent',JSON.stringify(r.slice(0,6)))}
+function drawRecent(){var box=$('recent');box.innerHTML='';recent().forEach(function(s){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent='🕘 '+s;b.dir='auto';b.onclick=function(){remember(s);go(M+'?q='+encodeURIComponent(s))};box.appendChild(b)})}
+drawRecent();
+$('searchForm').onsubmit=function(e){e.preventDefault();var s=$('q').value.trim();if(!s){go(M);return}remember(s);go(M+'?q='+encodeURIComponent(s))};
+$('dirForm').onsubmit=function(e){e.preventDefault();var t=$('to').value.trim(),f=$('from').value.trim();if(!t){$('to').focus();return}var u=M+'?daddr='+encodeURIComponent(t);if(f)u+='&saddr='+encodeURIComponent(f);go(u)};
+var a=$('auto');a.checked=localStorage.getItem('am_auto')!=='0';a.onchange=function(){localStorage.setItem('am_auto',a.checked?'1':'0')};
+var p=new URLSearchParams(location.search);
+if(p.get('go')==='search')$('q').focus();
+if(p.get('go')==='directions')$('to').focus();
+var dp;addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;$('install').style.display='block'});
+$('install').onclick=function(){if(dp){dp.prompt();dp.userChoice.then(function(){dp=null;$('install').style.display='none'})}};
+addEventListener('appinstalled',function(){$('install').style.display='none'});
+addEventListener('pageshow',function(e){if(e.persisted)document.documentElement.className=''});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js');
+</script>
+</body>
+</html>
