@@ -1,0 +1,67 @@
+{
+ "name": "Ivelt – אידישע וועלט פארומס",
+ "short_name": "Ivelt",
+ "description": "Mobile reader, live feed explorer and portal for Ivelt.com (אידישע וועלט פארומס).",
+ "id": "/",
+ "start_url": "/?source=pwa",
+ "scope": "/",
+ "display": "standalone",
+ "orientation": "portrait",
+ "dir": "rtl",
+ "lang": "yi",
+ "background_color": "#FAF7F0",
+ "theme_color": "#0F2942",
+ "icons": [
+  {
+   "src": "/assets/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/assets/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/assets/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "share_target": {
+  "action": "/",
+  "method": "GET",
+  "params": {
+   "title": "title",
+   "text": "text",
+   "url": "url"
+  }
+ },
+ "shortcuts": [
+  {
+   "name": "געהאלטענע אשכולות",
+   "short_name": "Saved",
+   "url": "/?tab=saved",
+   "icons": [
+    {
+     "src": "/assets/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "פארומס",
+   "short_name": "Boards",
+   "url": "/?tab=boards",
+   "icons": [
+    {
+     "src": "/assets/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  }
+ ]
+}
