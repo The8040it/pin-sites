@@ -33,5 +33,5 @@ chips();render();
 (function(){var n=0;D.forEach(function(c){n+=c.items.length});var e=document.getElementById('cnt');if(e)e.textContent=n;Q.placeholder='זוך אין אלע '+n+' לינקס…'})();
 document.querySelector('.stats').addEventListener('click',function(e){var b=e.target.closest('.stat');if(!b)return;cur=b.dataset.c;Q.value='';chips();render();window.scrollTo({top:document.querySelector('.hero').offsetHeight,behavior:'smooth'});var c=CH.querySelector('[data-c="'+cur+'"]');if(c&&c.scrollIntoView)c.scrollIntoView({inline:'center',block:'nearest'})});
 var TT=document.getElementById('tt');if(TT){TT.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'})});window.addEventListener('scroll',function(){TT.classList.toggle('on',window.scrollY>600)},{passive:true})}
-if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('/sw.js').catch(function(){})});
+if('serviceWorker' in navigator)window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){})});
 })();
