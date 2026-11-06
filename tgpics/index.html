@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram Pictures</title>
+<meta name="description" content="See the pictures in your Telegram chats and channels without saving them to your phone.">
+<meta name="theme-color" content="#081a33">
+<meta name="color-scheme" content="dark">
+<meta name="referrer" content="no-referrer">
+<link rel="manifest" href="manifest.webmanifest?v=2">
+<link rel="icon" href="icon-192.png?v=2" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
+<link rel="stylesheet" href="styles.css?v=2">
+</head>
+<body>
+<div id="app">
+
+  <!-- Loading -->
+  <section id="s-loading" class="screen active" aria-live="polite">
+    <div class="center-col">
+      <img class="logo-big" src="icon-192.png?v=2" alt="" width="96" height="96">
+      <h1 class="brand">TG Pics</h1>
+      <p class="muted" id="loading-msg">Connecting to Telegram…</p>
+      <div class="spinner" aria-hidden="true"></div>
+      <button class="btn ghost hidden" id="retry-btn" type="button">Try again</button>
+    </div>
+  </section>
+
+  <!-- Login -->
+  <section id="s-login" class="screen" aria-labelledby="login-h">
+    <div class="login-wrap">
+      <div class="login-head">
+        <img class="logo-mid" src="icon-192.png?v=2" alt="" width="72" height="72">
+        <h1 class="brand" id="login-h">Telegram Pictures</h1>
+        <p class="muted small">See the pictures in a chat without saving them<br><span class="yi" dir="rtl" lang="yi">זע די בילדער אן זיי אראפצולאדן</span></p>
+      </div>
+
+      <form id="f-phone" class="card step" autocomplete="on" novalidate>
+        <label for="phone">Your phone number · <span class="yi" dir="rtl" lang="yi">טעלעפאן נומער</span></label>
+        <input id="phone" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="+1 718 555 1234" dir="ltr" required>
+        <p class="hint">With country code. Telegram will send you a login code.</p>
+        <button class="btn gold" type="submit" id="phone-btn">Send code · <span class="yi" dir="rtl" lang="yi">שיק קאוד</span></button>
+      </form>
+
+      <form id="f-code" class="card step hidden" novalidate>
+        <label for="code">Login code · <span class="yi" dir="rtl" lang="yi">קאוד</span></label>
+        <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="12345" dir="ltr" maxlength="8" required>
+        <p class="hint" id="code-hint">Telegram sent the code to your <b>Telegram app</b>. Open Telegram, look at the message from “Telegram”, then come back and type it here.</p>
+        <button class="btn gold" type="submit" id="code-btn">Log in · <span class="yi" dir="rtl" lang="yi">אריינגיין</span></button>
+        <button class="btn link" type="button" id="code-back">Change number</button>
+      </form>
+
+      <form id="f-pass" class="card step hidden" novalidate>
+        <label for="pass">Your Telegram password · <span class="yi" dir="rtl" lang="yi">פאסווארט</span></label>
+        <input id="pass" type="password" autocomplete="current-password" dir="ltr" required>
+        <p class="hint" id="pass-hint">Your account has two-step verification. Type the password you set in Telegram.</p>
+        <button class="btn gold" type="submit" id="pass-btn">Continue · <span class="yi" dir="rtl" lang="yi">ווייטער</span></button>
+      </form>
+
+      <p class="error hidden" id="login-err" role="alert"></p>
+      <button class="btn ghost hidden" id="login-retry" type="button">Try again · <span class="yi" dir="rtl" lang="yi">פרובירט נאכאמאל</span></button>
+
+      <p class="privacy small">🔒 Your login stays only on this phone. Pictures are shown, never saved. Log out any time.</p>
+    </div>
+  </section>
+
+  <!-- Chats -->
+  <section id="s-chats" class="screen" aria-labelledby="chats-h">
+    <header class="topbar">
+      <img class="logo-sm" src="icon-192.png?v=2" alt="" width="34" height="34">
+      <h1 id="chats-h" class="topbar-title">TG Pics</h1>
+      <button class="icon-btn" id="menu-btn" type="button" aria-label="Menu" aria-haspopup="true">⋮</button>
+      <div class="menu hidden" id="menu" role="menu">
+        <div class="menu-who" id="me-name" dir="auto"></div>
+        <button type="button" role="menuitem" id="logout-btn">Log out · <span class="yi" dir="rtl" lang="yi">ארויסגיין</span></button>
+      </div>
+    </header>
+    <div class="chats-tools">
+      <div class="search">
+        <span aria-hidden="true">🔍</span>
+        <input id="chat-q" type="search" placeholder="Search chats · זוך" dir="auto" autocomplete="off" aria-label="Search chats">
+      </div>
+      <form class="linkbox" id="f-link" novalidate>
+        <input id="link" type="url" inputmode="url" placeholder="Paste a link: t.me/channel" dir="ltr" autocomplete="off" aria-label="Channel link or username">
+        <button class="btn gold sm" type="submit">Open</button>
+      </form>
+    </div>
+    <p class="error hidden" id="chats-err" role="alert"></p>
+    <button class="btn ghost hidden" id="chats-retry" type="button">Try again</button>
+    <ul class="chat-list" id="chat-list" aria-label="Your chats"></ul>
+    <p class="muted center small" id="chats-status">Loading your chats…</p>
+    <p class="privacy small center">🔒 Pictures are shown, never saved.</p>
+  </section>
+
+  <!-- Gallery -->
+  <section id="s-gallery" class="screen" aria-labelledby="g-title">
+    <header class="topbar">
+      <button class="icon-btn" id="g-back" type="button" aria-label="Back">‹</button>
+      <div class="g-titles">
+        <h1 class="topbar-title" id="g-title" dir="auto"></h1>
+        <div class="muted small" id="g-count"></div>
+      </div>
+    </header>
+    <div class="tabs" role="tablist">
+      <button role="tab" class="tab active" data-kind="photos" aria-selected="true">Photos <span class="yi" lang="yi">בילדער</span></button>
+      <button role="tab" class="tab" data-kind="files" aria-selected="false">Image files <span class="yi" lang="yi">פיילס</span></button>
+    </div>
+    <div class="grid" id="grid" aria-label="Pictures"></div>
+    <div id="sentinel" aria-hidden="true"></div>
+    <p class="muted center small" id="g-status"></p>
+  </section>
+
+  <!-- Viewer -->
+  <div id="viewer" class="hidden" role="dialog" aria-modal="true" aria-label="Picture">
+    <div class="v-stage" id="v-stage">
+      <img id="v-img" alt="" draggable="false">
+      <div class="spinner v-spin" id="v-spin" aria-hidden="true"></div>
+    </div>
+    <div class="v-top">
+      <button class="icon-btn light" id="v-close" type="button" aria-label="Close">✕</button>
+      <div class="v-pos" id="v-pos"></div>
+    </div>
+    <button class="v-nav prev" id="v-prev" type="button" aria-label="Newer">‹</button>
+    <button class="v-nav next" id="v-next" type="button" aria-label="Older">›</button>
+    <div class="v-cap">
+      <div class="v-date" id="v-date"></div>
+      <div class="v-text" id="v-text" dir="auto"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast" role="status"></div>
+  <div id="dbg" class="hidden" role="dialog" aria-label="Debug log">
+    <div class="dbg-bar"><b>Debug log</b><span><button type="button" id="dbg-copy">Copy</button> <button type="button" id="dbg-close">Close</button></span></div>
+    <pre id="dbg-pre" dir="ltr"></pre>
+  </div>
+</div>
+<script src="tg.js?v=2"></script>
+<script src="app.js?v=2"></script>
+</body>
+</html>
