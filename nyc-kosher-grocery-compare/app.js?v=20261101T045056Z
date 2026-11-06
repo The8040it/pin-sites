@@ -1,0 +1,147 @@
+(function(){"use strict";
+var M=window.CMP_META,A=M.areas,CATS=M.cats,ITEMS=[],VIEW=[],shown=0,PAGE=24,cat=-1,singles=false,singlesState="",BYN=null,dealArea=0;
+var EMO=["🥦","🥛","🍗","🐟","🥪","🥖","🥫","🧁","🍫","🧃","🧊","🧻","🧴","🍼"];
+var $=function(id){return document.getElementById(id)};
+var list=load("kgc_list1",[]);
+function load(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+function save(){try{localStorage.setItem("kgc_list1",JSON.stringify(list))}catch(e){}}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function money(c){return "$"+(c/100).toFixed(2)}
+function money0(c){return "$"+Math.round(c/100).toLocaleString("en-US")}
+function fmt(n){return Number(n).toLocaleString("en-US")}
+function bdg(k,cls){return '<span class="bdg a-'+k+(cls?" "+cls:"")+'" aria-hidden="true">'+k+'</span>'}
+function emo(c){return c>=0?EMO[c]:"🛍️"}
+function when(iso){try{return new Date(iso).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit",timeZone:"America/New_York"})}catch(e){return iso}}
+function day(iso){try{return new Date(iso).toLocaleDateString("en-US",{month:"short",day:"numeric",timeZone:"America/New_York"})}catch(e){return iso}}
+function gunzip(b64){var bin=atob(b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  if(typeof DecompressionStream==="undefined")return Promise.reject(new Error("old"));
+  return new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream("gzip"))).json()}
+function mk(r){var n=0,mn=1e9,mx=0;for(var k=0;k<4;k++){var e=r[2][k];if(e){n++;if(e[1]<mn)mn=e[1];if(e[1]>mx)mx=e[1]}}
+  return {n:r[0],c:r[1],r:r[2],lc:r[0].toLowerCase(),na:n,gap:n>1?mx-mn:0}}
+function addItems(rows){for(var i=0;i<rows.length;i++)ITEMS.push(mk(rows[i]))}
+
+/* ---------- hero, scoreboard ---------- */
+function staleTag(a){return a.stale?'<span class="stale" title="'+esc(a.stale)+'">'+esc(day(a.updated))+' prices</span>':""}
+function hero(){
+  $("legend").innerHTML=A.map(function(a){return '<span class="lg">'+bdg(a.k)+esc(a.label)+'</span>'}).join("");
+  $("heroCount").textContent=fmt(Math.round(M.n_multi/100)*100);
+  var b=M.board,mn=Math.min.apply(null,b.tot),ord=[0,1,2,3].sort(function(x,y){return b.tot[x]-b.tot[y]});
+  var pcts=b.tot.map(function(t){return (t/mn-1)*100}),mxp=Math.max.apply(null,pcts)||1;
+  $("boardN").textContent=fmt(b.n)+" products";
+  $("boardSub").textContent="If you bought every product sold in all four areas, each at that area's cheapest store:";
+  var medals=["🥇","🥈","🥉"];
+  $("ranks").innerHTML=ord.map(function(k,i){var a=A[k],p=pcts[k];
+    return '<li class="rank a-'+a.k+(i===0?" first":"")+'">'+(i<3?'<span class="medal" aria-label="Place '+(i+1)+'">'+medals[i]+'</span>':'<span class="medal n" aria-label="Place 4">4th</span>')+
+    bdg(a.k,"lgx")+'<div class="rmain"><div class="rtop"><span class="rname">'+esc(a.label)+staleTag(a)+'</span><span class="rpct">'+(i===0?"Cheapest":"+"+p.toFixed(1)+"%")+'</span></div>'+
+    '<div class="rbar"><i data-w="'+(100-(p/mxp)*55).toFixed(1)+'"></i></div>'+
+    '<div class="rsub">'+money0(b.tot[k])+' total · cheapest on <b>'+fmt(b.wins[k])+'</b> items</div></div></li>'}).join("");
+  requestAnimationFrame(function(){setTimeout(function(){var bars=document.querySelectorAll(".rbar i");for(var i=0;i<bars.length;i++)bars[i].style.width=bars[i].getAttribute("data-w")+"%"},120)});
+  var w=A[ord[0]],s=A[ord[3]];
+  var stale=A.filter(function(a){return a.stale});
+  $("boardNote").innerHTML="Shopping in "+esc(w.label)+" instead of "+esc(s.label)+" saves about <b>"+pcts[ord[3]].toFixed(1)+"%</b>."+(stale.length?" "+stale.map(function(a){return esc(a.stale)}).join(" "):"");
+  $("catwins").innerHTML=M.catb.map(function(c){var a=A[c[1]];return '<button type="button" class="cw a-'+a.k+'" data-cat="'+c[0]+'"><span class="e" aria-hidden="true">'+EMO[c[0]]+'</span><span><b>'+esc(CATS[c[0]])+'</b><span>'+esc(a.short)+' wins · '+c[2]+'% less</span></span></button>'}).join("");
+}
+function miniBars(r){var mx=0,mn=1e9;r.forEach(function(e){if(e){mx=Math.max(mx,e[1]);mn=Math.min(mn,e[1])}});
+  return '<div class="minibars">'+r.map(function(e,k){if(!e)return"";var a=A[k];return '<div class="mb a-'+a.k+(e[1]===mn?" best":"")+'">'+bdg(a.k)+'<span class="t"><i style="width:'+(e[1]/mx*100).toFixed(1)+'%"></i></span><span class="v">'+money(e[1])+'</span></div>'}).join("")+'</div>'}
+function fun(){
+  $("gaps").innerHTML=M.gaps.map(function(g){var ps=g[2].filter(Boolean).map(function(e){return e[1]});var gap=Math.max.apply(null,ps)-Math.min.apply(null,ps);
+    return '<div class="gap"><div class="gname">'+esc(g[0])+'</div><div class="gapamt">'+money(gap)+'<small>price gap</small></div>'+miniBars(g[2])+addBtn(g[0],"gapadd")+'</div>'}).join("");
+  $("dealtabs").innerHTML=A.map(function(a,k){return '<button type="button" role="tab" class="dtab a-'+a.k+'" data-k="'+k+'" aria-selected="'+(k===dealArea)+'">'+bdg(a.k)+esc(a.short)+'</button>'}).join("");
+  var a=A[dealArea];
+  $("deals").innerHTML=(M.deals[dealArea]||[]).map(function(d){var e=d[2][dealArea],o=1e9,ok=-1;d[2].forEach(function(x,j){if(x&&j!==dealArea&&x[1]<o){o=x[1];ok=j}});
+    return '<div class="deal a-'+a.k+'"><div class="dn">'+esc(d[0])+'<div class="ds">at '+esc(a.stores[e[0]])+' · next best '+money(o)+' in '+esc(A[ok].short)+'</div></div><div class="dp"><b>'+money(e[1])+'</b><s>'+money(o)+'</s></div></div>'}).join("");
+}
+
+/* ---------- chips & search ---------- */
+function chips(){var h='<button class="chip" type="button" data-cat="-1" aria-pressed="'+(cat===-1)+'"><span class="e" aria-hidden="true">✨</span>All</button>';
+  CATS.forEach(function(c,i){h+='<button class="chip" type="button" data-cat="'+i+'" aria-pressed="'+(cat===i)+'"><span class="e" aria-hidden="true">'+EMO[i]+'</span>'+esc(c)+'</button>'});$("cats").innerHTML=h}
+function setCat(c){cat=c;chips();run();var b=document.querySelector('.chip[aria-pressed="true"]');if(b&&b.scrollIntoView)b.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"})}
+function run(){
+  var q=$("q").value.trim().toLowerCase(),ws=q.split(/\s+/).filter(Boolean);
+  $("qclear").hidden=!q;
+  $("fun").hidden=!!(q||cat>=0);
+  VIEW=[];
+  for(var i=0;i<ITEMS.length;i++){var it=ITEMS[i];if(!singles&&it.na<2)continue;if(cat>=0&&it.c!==cat)continue;
+    var ok=true;for(var j=0;j<ws.length;j++)if(it.lc.indexOf(ws[j])<0){ok=false;break}if(ok)VIEW.push(i)}
+  VIEW.sort(function(x,y){var a=ITEMS[x],b=ITEMS[y];if(ws.length){var sa=a.lc.indexOf(ws[0])===0?1:0,sb=b.lc.indexOf(ws[0])===0?1:0;if(sa!==sb)return sb-sa}
+    return (b.na-a.na)||(x-y)});
+  $("resTitle").textContent=q?"Results for “"+$("q").value.trim()+"”":(cat>=0?EMO[cat]+" "+CATS[cat]:"Browse products");
+  $("totline").textContent=fmt(VIEW.length)+" products"+(singlesState==="loading"?" · loading more…":"");
+  shown=0;$("results").innerHTML="";more()}
+function more(){var h="",end=Math.min(VIEW.length,shown+PAGE);for(var i=shown;i<end;i++)h+=card(VIEW[i]);
+  if(!VIEW.length)h='<div class="empty"><div class="big">🧐</div><p>Nothing matches that. Try a shorter word, like “mayo” or “plates”'+(singles?"":", or switch on items found in only one area")+'.</p></div>';
+  $("results").insertAdjacentHTML("beforeend",h);shown=end;$("more").hidden=shown>=VIEW.length;
+  requestAnimationFrame(function(){setTimeout(function(){var bs=document.querySelectorAll(".prow .bar i[data-w]");for(var i=0;i<bs.length;i++){bs[i].style.width=bs[i].getAttribute("data-w")+"%";bs[i].removeAttribute("data-w")}},30)})}
+function inList(n){for(var i=0;i<list.length;i++)if(list[i].n===n)return i;return -1}
+function addBtn(n,cls){var on=inList(n)>=0;return '<button type="button" class="'+cls+(on?" in":"")+'" data-add="'+esc(n)+'" aria-pressed="'+on+'">'+(on?"✓ On list":"+ Add")+'</button>'}
+function card(i){var it=ITEMS[i],r=it.r,mx=0,mn=1e9,mnk=[],mxk=-1;
+  r.forEach(function(e,k){if(e){if(e[1]>mx){mx=e[1];mxk=k}if(e[1]<mn){mn=e[1];mnk=[k]}else if(e[1]===mn)mnk.push(k)}});
+  var rows=r.map(function(e,k){var a=A[k];
+    if(!e)return '<div class="prow none a-'+a.k+'">'+bdg(a.k)+'<div class="pb"><div class="pl"><span class="st">'+esc(a.label)+'</span></div></div><span class="pv">not sold</span></div>';
+    var best=it.na>1&&e[1]===mn;
+    return '<div class="prow a-'+a.k+(best?" best":"")+'">'+bdg(a.k)+'<div class="pb"><div class="pl"><span class="st">'+esc(a.short)+' · '+esc(a.stores[e[0]])+'</span><span>'+(e[2]&1?'<span class="tag ap" title="Matched by name or photo, not barcode">≈</span>':"")+(e[2]&2?'<span class="tag sale">SALE</span>':"")+'</span></div><div class="bar"><i data-w="'+(e[1]/mx*100).toFixed(1)+'"></i></div></div><span class="pv">'+money(e[1])+(best?'<span class="crown" aria-label="cheapest">👑</span>':"")+'</span></div>'}).join("");
+  var save="";
+  if(it.na>1){if(mn<mx){var w=A[mnk[0]];save='<div class="save a-'+w.k+'">💸 You save <b>'+money(mx-mn)+'</b> by shopping in <b>'+esc(mnk.map(function(k){return A[k].short}).join(" or "))+'</b> instead of '+esc(A[mxk].short)+'</div>'}
+    else save='<div class="save tie">🤝 Same price everywhere it\'s sold</div>'}
+  var alts=r.map(function(e,k){return e&&e[3]&&(e[2]&1)&&e[3].toLowerCase()!==it.lc?esc(A[k].short)+': “'+esc(e[3])+'”':""}).filter(Boolean);
+  return '<article class="item"><div class="ihead"><span class="iemo" aria-hidden="true">'+emo(it.c)+'</span><h3 class="iname">'+esc(it.n)+'</h3>'+addBtn(it.n,"addbtn")+'</div>'+rows+save+(alts.length?'<div class="alt">≈ Listed as '+alts.join(" · ")+'</div>':"")+'</article>'}
+
+/* ---------- list ---------- */
+function byName(){if(!BYN){BYN={};for(var i=0;i<ITEMS.length;i++)if(!(ITEMS[i].n in BYN))BYN[ITEMS[i].n]=ITEMS[i]}return BYN}
+function toggle(n,btn){var x=inList(n);if(x>=0)list.splice(x,1);else list.push({n:n,q:1});save();updList(x<0);
+  var bs=document.querySelectorAll("[data-add]");for(var i=0;i<bs.length;i++)if(bs[i].getAttribute("data-add")===n){var on=inList(n)>=0;bs[i].classList.toggle("in",on);bs[i].setAttribute("aria-pressed",on);bs[i].textContent=on?"✓ On list":"+ Add";bs[i].classList.remove("pop");void bs[i].offsetWidth;bs[i].classList.add("pop")}}
+function calc(){var m=byName(),T=[0,0,0,0],miss=[0,0,0,0],S=[0,0,0,0],ns=0,rows=[];
+  list.forEach(function(l){var it=m[l.n];rows.push({l:l,it:it});var all=!!it;for(var k=0;k<4;k++){var e=it&&it.r[k];if(e)T[k]+=e[1]*l.q;else{miss[k]++;all=false}}
+    if(all){ns++;for(k=0;k<4;k++)S[k]+=it.r[k][1]*l.q}});
+  var ord=[0,1,2,3].sort(ns?function(a,b){return (S[a]-S[b])||(miss[a]-miss[b])}:function(a,b){return (miss[a]-miss[b])||(T[a]-T[b])});
+  return {T:T,miss:miss,S:S,ns:ns,rows:rows,ord:ord}}
+function updList(bump){var n=list.reduce(function(s,l){return s+l.q},0);$("listbar").hidden=!list.length;$("listn").textContent=n;
+  if(!list.length){if(!$("sheet").hidden)closeSheet();return}
+  var c=calc(),b=c.ord[0],a=A[b];
+  var sv=c.ns?c.S[c.ord[3]]-c.S[b]:0;
+  $("listbest").innerHTML='<span class="dot a-'+a.k+'"></span>'+esc(a.label)+(sv>0?' · saves '+money(sv):' · '+money(c.T[b]));
+  if(bump){var lb=$("listbar");lb.classList.remove("bump");void lb.offsetWidth;lb.classList.add("bump")}
+  if(!$("sheet").hidden)sheet()}
+function sheet(){var c=calc(),T=c.T,S=c.S,miss=c.miss,b=c.ord[0],full=[0,1,2,3].filter(function(k){return !miss[k]});
+  var mx=Math.max.apply(null,T)||1,h="",nItems=c.rows.length;
+  if(c.ns){var lo=c.ord[0],hi=c.ord[3];
+    h+='<div class="winmsg">🏆 <b>'+esc(A[lo].label)+'</b> is cheapest for your list'+(c.ns<nItems?' (on the '+c.ns+' item'+(c.ns>1?"s":"")+' every area sells)':"")+'. You save <b>'+money(S[hi]-S[lo])+'</b> compared with '+esc(A[hi].label)+'.'+
+      (full.length===4?"":full.length?' Only '+full.map(function(k){return esc(A[k].short)}).join(", ")+' '+(full.length>1?"have":"has")+' everything.':' No area has everything.')+'</div>'}
+  else if(full.length===1)h+='<div class="winmsg">🏆 Only <b>'+esc(A[full[0]].label)+'</b> has everything on your list: '+money(T[full[0]])+'.</div>';
+  else h+='<div class="winmsg">No single item on your list is sold in all four areas yet, so totals below leave out what each area is missing.</div>';
+  h+=c.ord.map(function(k){var a=A[k];return '<div class="tot a-'+a.k+(k===b?" win":"")+'">'+bdg(a.k,"lgx")+'<div><div class="tn">'+esc(a.label)+(k===b?" 👑":"")+'</div><div class="tm">'+(miss[k]?miss[k]+" item"+(miss[k]>1?"s":"")+" not sold here":"Has everything")+(c.ns&&c.ns<nItems?" · shared items "+money(S[k]):"")+'</div></div><div class="tv">'+money(T[k])+'</div><div class="bar"><i style="width:'+(T[k]/mx*100).toFixed(1)+'%"></i></div></div>'}).join("");
+  $("totals").innerHTML=h;
+  $("listitems").innerHTML=c.rows.map(function(x,i){var it=x.it,bk=-1,bp=1e9;if(it)it.r.forEach(function(e,k){if(e&&e[1]<bp){bp=e[1];bk=k}});
+    return '<div class="li">'+(bk>=0?bdg(A[bk].k):"")+'<div class="ln">'+esc(x.l.n)+'<div class="lb">'+(it?(bk>=0?"Cheapest: "+money(bp)+" in "+esc(A[bk].short):""):"Not in this snapshot")+'</div></div><div class="qty"><button type="button" data-q="'+i+'" data-d="-1" aria-label="One less">−</button><span>'+x.l.q+'</span><button type="button" data-q="'+i+'" data-d="1" aria-label="One more">+</button></div></div>'}).join("")}
+function openSheet(){sheet();$("sheet").hidden=false;document.body.style.overflow="hidden";$("closelist").focus()}
+function closeSheet(){$("sheet").hidden=true;document.body.style.overflow="";$("openlist").focus()}
+
+/* ---------- singles ---------- */
+function loadSingles(cb){if(singlesState==="ok"){cb&&cb();return}if(singlesState==="loading")return;singlesState="loading";
+  var s=document.createElement("script");s.src="data-s.js?v="+encodeURIComponent(M.snap);s.async=true;
+  s.onload=function(){gunzip(window.CMP_S).then(function(rows){window.CMP_S=null;addItems(rows);singlesState="ok";BYN=null;updList();cb&&cb()}).catch(function(){singlesState="fail";run()})};
+  s.onerror=function(){singlesState="fail";run()};document.head.appendChild(s)}
+
+/* ---------- wire up ---------- */
+function about(){$("snap").textContent=when(M.snap)+" ET";
+  $("upd").innerHTML=A.map(function(a){return '<li>'+bdg(a.k)+'<span><b>'+esc(a.label)+'</b>: updated '+esc(when(a.updated))+' ET'+(a.stale?' <span class="stale">older</span>':"")+'</span></li>'}).join("")}
+var tmr;
+$("q").addEventListener("input",function(){clearTimeout(tmr);tmr=setTimeout(run,140)});
+$("q").addEventListener("keydown",function(e){if(e.key==="Enter")this.blur()});
+$("qclear").addEventListener("click",function(){$("q").value="";run();$("q").focus()});
+document.addEventListener("click",function(e){var t=e.target.closest?e.target.closest("[data-add],[data-cat],[data-k],[data-q]"):null;if(!t)return;
+  if(t.hasAttribute("data-add"))toggle(t.getAttribute("data-add"),t);
+  else if(t.hasAttribute("data-cat")){var c=+t.getAttribute("data-cat");setCat(t.classList.contains("cw")||cat!==c?c:-1);if(t.classList.contains("cw"))$("searchwrap").scrollIntoView({behavior:"smooth"})}
+  else if(t.hasAttribute("data-k")){dealArea=+t.getAttribute("data-k");fun()}
+  else if(t.hasAttribute("data-q")){var i=+t.getAttribute("data-q"),d=+t.getAttribute("data-d");list[i].q+=d;if(list[i].q<1)list.splice(i,1);save();updList()}});
+$("more").addEventListener("click",more);
+$("singles").addEventListener("change",function(){singles=this.checked;if(singles)loadSingles(run);run()});
+$("openlist").addEventListener("click",openSheet);$("closelist").addEventListener("click",closeSheet);
+$("sheet").addEventListener("click",function(e){if(e.target===this)closeSheet()});
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("sheet").hidden)closeSheet()});
+$("clearlist").addEventListener("click",function(){if(confirm("Clear your whole list?")){list=[];save();updList();closeSheet()}});
+hero();fun();chips();about();
+gunzip(window.CMP_M).then(function(rows){window.CMP_M=null;addItems(rows);run();updList();
+  var missing=list.some(function(l){return !byName()[l.n]});if(missing)loadSingles(function(){if(singles)run()})})
+ .catch(function(){$("totline").textContent="Your browser couldn't open the price data. Try updating Chrome.";});
+})();

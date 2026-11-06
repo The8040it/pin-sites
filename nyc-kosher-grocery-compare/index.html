@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Basket Battle: kosher grocery prices in KJ, Boro Park, Monsey &amp; Williamsburg</title>
+<meta name="description" content="Which neighborhood saves you the most? Compare about 19,700 kosher grocery products across KJ/Monroe, Boro Park, Monsey and Williamsburg, with the cheapest store in each area and a shopping list that totals every area.">
+<meta property="og:title" content="Basket Battle: which neighborhood saves you the most?">
+<meta property="og:description" content="KJ vs Boro Park vs Monsey vs Williamsburg: the cheapest kosher grocery prices, item by item, plus a list that crowns the cheapest area.">
+<meta name="theme-color" content="#2b1260">
+<link rel="stylesheet" href="styles.css%3Fv=20261101T045056Z.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-in">
+    <div class="brand"><span class="logo" aria-hidden="true">🛒</span><span class="bname">Basket<b>Battle</b></span></div>
+    <h1>Which neighborhood saves you the most?</h1>
+    <p class="tag">KJ · Boro Park · Monsey · Williamsburg. <span id="heroCount">About 19,700</span> kosher products, the cheapest store in each area.</p>
+    <div class="arealegend" id="legend"></div>
+  </div>
+</header>
+
+<main>
+  <section class="card board" id="board" aria-labelledby="boardTitle">
+    <div class="sechead"><h2 id="boardTitle">🏆 The scoreboard</h2><span class="pill" id="boardN"></span></div>
+    <p class="secsub" id="boardSub"></p>
+    <ol class="ranks" id="ranks"></ol>
+    <p class="fine" id="boardNote"></p>
+    <div class="catwins" id="catwins" aria-label="Cheapest area by category"></div>
+  </section>
+
+  <div class="searchwrap" id="searchwrap">
+    <div class="searchbox">
+      <span class="sicon" aria-hidden="true">🔎</span>
+      <input id="q" type="search" placeholder="Search mayo, milk, Gefen, plates…" autocomplete="off" enterkeyhint="search" aria-label="Search products">
+      <button id="qclear" class="qclear" type="button" aria-label="Clear search" hidden>✕</button>
+    </div>
+    <div class="chips" id="cats" role="toolbar" aria-label="Categories"></div>
+  </div>
+
+  <section id="fun" class="fun" aria-label="Fun facts">
+    <div class="sechead plain"><h2>💥 Biggest price gaps right now</h2></div>
+    <p class="secsub">Same product, very different price depending on where you shop.</p>
+    <div class="hscroll" id="gaps"></div>
+
+    <div class="sechead plain"><h2>⭐ Best deals in each area</h2></div>
+    <div class="dealtabs" id="dealtabs" role="tablist" aria-label="Choose an area"></div>
+    <div id="deals" class="deals"></div>
+  </section>
+
+  <section class="resultsec" aria-label="Products">
+    <div class="reshead"><h2 id="resTitle">Browse products</h2><span class="totline" id="totline">Loading prices…</span></div>
+    <label class="tog"><input type="checkbox" id="singles"> <span>Also show items found in only one area</span></label>
+    <div id="results" aria-live="polite"></div>
+    <button id="more" class="more" type="button" hidden>Show more</button>
+  </section>
+
+  <section class="card note" id="how">
+    <h2>How this works</h2>
+    <p>Prices come from four price sites, one per area, which read each store's own online-ordering prices:
+    <a href="https://kj-grocery-prices.sites.tab.bot/">KJ Grocery Prices</a>,
+    <a href="https://boropark-groceries.sites.tab.bot/">Boro Park Grocery Prices</a>,
+    <a href="https://monsey-groceries.sites.tab.bot/">Monsey Grocery Prices</a> and
+    <a href="https://wburg-grocery-prices.sites.tab.bot/">Williamsburg Grocery Prices</a>. All the credit for the price data goes to them.</p>
+    <p>For each area you see the lowest price at any store there (the sale price when there is one), and which store has it. The 👑 marks the cheapest area.</p>
+    <p>The scoreboard adds up the cheapest price in each area for every product sold in all four areas, leaving out pairs whose prices are too far apart to be the same item.</p>
+    <p>Products are matched across areas by <b>barcode</b>. The Williamsburg site doesn't publish barcodes, so its items (and a few others) are matched by the exact product name and size, or by the shared product photo with the same size. Those prices are marked <span class="tag ap">≈</span>; double-check the size before you rely on them.</p>
+    <p>This is a <b>snapshot</b> of the four sites, taken <span id="snap"></span>. Each area's own update time is below. Online prices can differ from in-store prices, and delivery fees aren't included.</p>
+    <ul class="upd" id="upd"></ul>
+  </section>
+</main>
+
+<div class="listbar" id="listbar" hidden>
+  <button id="openlist" type="button" aria-label="Open my list">
+    <span class="lbcount"><span aria-hidden="true">🛒</span> <b id="listn">0</b></span>
+    <span class="lbtext"><span class="lbk">Cheapest for your list</span><span id="listbest" class="lbv">…</span></span>
+    <span class="lbgo" aria-hidden="true">›</span>
+  </button>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheettitle">
+  <div class="sheetin">
+    <div class="grab" aria-hidden="true"></div>
+    <div class="sheethead"><h2 id="sheettitle">🛒 My list</h2><button id="closelist" type="button" aria-label="Close">✕</button></div>
+    <div id="totals"></div>
+    <div id="listitems"></div>
+    <button id="clearlist" class="clear" type="button">Clear list</button>
+  </div>
+</div>
+
+<script src="meta.js%3Fv=20261101T045056Z"></script>
+<script src="data-m.js%3Fv=20261101T045056Z"></script>
+<script src="app.js%3Fv=20261101T045056Z"></script>
+</body>
+</html>
